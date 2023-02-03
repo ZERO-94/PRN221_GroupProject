@@ -1,0 +1,12 @@
+C:\Users\kiman\source\repos\BulkyBook\BulkyBook.BusinessObjet\bin\Debug\net6.0\BulkyBook.BusinessObject.deps.json
+C:\Users\kiman\source\repos\BulkyBook\BulkyBook.BusinessObjet\bin\Debug\net6.0\BulkyBook.BusinessObject.dll
+C:\Users\kiman\source\repos\BulkyBook\BulkyBook.BusinessObjet\bin\Debug\net6.0\BulkyBook.BusinessObject.pdb
+C:\Users\kiman\source\repos\BulkyBook\BulkyBook.BusinessObjet\obj\Debug\net6.0\BulkyBook.BusinessObject.csproj.AssemblyReference.cache
+C:\Users\kiman\source\repos\BulkyBook\BulkyBook.BusinessObjet\obj\Debug\net6.0\BulkyBook.BusinessObject.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\kiman\source\repos\BulkyBook\BulkyBook.BusinessObjet\obj\Debug\net6.0\BulkyBook.BusinessObject.AssemblyInfoInputs.cache
+C:\Users\kiman\source\repos\BulkyBook\BulkyBook.BusinessObjet\obj\Debug\net6.0\BulkyBook.BusinessObject.AssemblyInfo.cs
+C:\Users\kiman\source\repos\BulkyBook\BulkyBook.BusinessObjet\obj\Debug\net6.0\BulkyBook.BusinessObject.csproj.CoreCompileInputs.cache
+C:\Users\kiman\source\repos\BulkyBook\BulkyBook.BusinessObjet\obj\Debug\net6.0\BulkyBook.BusinessObject.dll
+C:\Users\kiman\source\repos\BulkyBook\BulkyBook.BusinessObjet\obj\Debug\net6.0\refint\BulkyBook.BusinessObject.dll
+C:\Users\kiman\source\repos\BulkyBook\BulkyBook.BusinessObjet\obj\Debug\net6.0\BulkyBook.BusinessObject.pdb
+C:\Users\kiman\source\repos\BulkyBook\BulkyBook.BusinessObjet\obj\Debug\net6.0\ref\BulkyBook.BusinessObject.dll

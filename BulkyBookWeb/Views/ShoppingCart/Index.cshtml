@@ -1,0 +1,56 @@
+﻿@model IEnumerable<CartProduct>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+@if(@Model != null) {
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Id
+            </th>
+            <th>
+                Title
+            </th>
+            <th>
+                Total
+            </th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Product.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Total)
+                </td>
+                <td>
+                        <form asp-controller="ShoppingCart" asp-action="Update" method="post">
+                            <input name="productId" type="hidden" value="@item.Id" />
+                            <input name="amount" type="number" value="@item.Total" />
+                            <button class="btn btn-success" type="submit" value="Update">Update</button>
+                            </form> |
+                        <form asp-controller="ShoppingCart" asp-action="Update" method="post">
+                            <input name="productId" type="hidden" value="@item.Id" />
+                            <input name="amount" type="hidden" value="0" />
+                            <button class="btn btn-danger" type="submit" value="Remove">Remove</button>
+                        </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+} else {
+    <p>Please start buying thing!</p>
+}

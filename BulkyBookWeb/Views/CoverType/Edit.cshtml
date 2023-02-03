@@ -1,0 +1,27 @@
+﻿
+
+@model CoverType;
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<div class="d-flex justify-content-between">
+    <h1>Edit Cover type</h1>
+    <a asp-controller="Category" asp-action="Index">Back to category list</a>
+</div>
+
+<form method="post" asp-action="Edit">
+    <div asp-validation-summary="ModelOnly"></div>
+    <div>
+        <label asp-for="Name">Cover type name</label>
+        <input asp-for="Name" class="form-control"/>
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary mt-2">Edit</button>
+</form>
+
+@section Scripts 
+{
+    <partial name="_ValidationScriptsPartial"/>
+}

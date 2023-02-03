@@ -1,0 +1,51 @@
+﻿
+@model List<Category>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="w-100 d-flex justify-content-between my-3">
+    <h1>Categories</h1>
+    <div class="btn-group">
+        <a class="rounded-3 bg-light text-dark fw-semibold text-decoration-none d-flex justify-content-center align-items-center px-2" asp-controller="Category" asp-action="Create">Create category</a>
+    </div>
+</div>
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>
+                Category Name
+            </th>
+            <th>
+                Display Order
+            </th>
+            <th>
+                Created Time
+            </th>
+            <th>
+                Action
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var obj in Model)
+        {
+            <tr>
+                <td>
+                    @obj.Name
+                </td>
+                <td>
+                    @obj.DisplayOrder
+                </td>
+                <td>
+                    @obj.CreatedDateTime.ToLocalTime()
+                </td>
+                <td>
+                    <a asp-controller="Category" asp-action="Edit" asp-route-id="@obj.Id">Edit</a>
+                    <a asp-controller="Category" asp-action="Delete" asp-route-id="@obj.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
