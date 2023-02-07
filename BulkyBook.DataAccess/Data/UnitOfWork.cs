@@ -1,15 +1,7 @@
-﻿using BulkyBook.BusinessObject.Models;
-using BulkyBook.DataAccess.Repositories.ApplicationUserRepository;
+﻿using BulkyBook.DataAccess.Repositories.ApplicationUserRepository;
 using BulkyBook.DataAccess.Repositories.CategoryRepository;
-using BulkyBook.DataAccess.Repositories.CompanyRepository;
 using BulkyBook.DataAccess.Repositories.CoverTypeRepository;
 using BulkyBook.DataAccess.Repositories.ProductRepository;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BulkyBook.DataAccess.Data
 {
@@ -26,7 +18,6 @@ namespace BulkyBook.DataAccess.Data
         private ICoverTypeRepository coverTypeRepository;
         private IProductRepository productRepository;
         private IApplicationUserRepository applicationUserRepository;
-        private ICompanyRepository companyRepository;
 
         public ICategoryRepository CategoryRepository { 
             get
@@ -72,19 +63,7 @@ namespace BulkyBook.DataAccess.Data
                 }    
                 return this.applicationUserRepository;
             }
-        }
-
-        public ICompanyRepository CompanyRepository
-        {
-            get
-            {
-                if(this.companyRepository == null)
-                {
-                    this.companyRepository= new CompanyRepository(context);
-                } 
-                return this.companyRepository;
-            }
-        }    
+        }   
 
         public async Task<int> SaveAsync()
         {

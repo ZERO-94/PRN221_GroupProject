@@ -128,8 +128,6 @@ namespace BulkyBookWeb.Areas.Identity.Pages.Account
                 await _roleManager.CreateAsync(new IdentityRole(Role.Role_Admin));
             }
 
-            IEnumerable<Company> _companyList = await unitOfWork.CompanyRepository.GetAll();
-
             ReturnUrl = returnUrl;
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
         }
