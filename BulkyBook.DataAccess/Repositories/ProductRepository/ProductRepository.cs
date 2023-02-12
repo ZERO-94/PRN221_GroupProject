@@ -39,7 +39,6 @@ namespace BulkyBook.DataAccess.Repositories.ProductRepository
                     productFromDb.ImageUrl= product.ImageUrl;
                 }
             }
-
         }
     }
 }

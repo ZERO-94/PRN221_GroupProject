@@ -45,6 +45,16 @@ body {
             border-radius: 12px;
         }
 
+    .product-index .product-search {
+        background-color: white;
+        color: black;
+        border: 1px solid black;
+        width: 40vw;
+        border-radius: 10px;
+        padding-left: 10px;
+        height: 36px;
+    }
+
 table td, th {
     color: black;
     border: 1px solid black;
@@ -68,7 +78,7 @@ table td, th {
         font-size: 14px;
         padding: 8px 16px;
         border-radius: 12px;
-        background-color: black;
+        background-color: dodgerblue;
         font-weight: bold;
         border: none;
     }
@@ -90,24 +100,24 @@ table td, th {
     padding: 50px 0px;
 }
 
-.product-delete-page .cancel-btn a {
-    color: white;
-    font-size: 14px;
-    padding: 9px 16px;
-    border-radius: 12px;
-    background-color: black;
-    font-weight: bold;
-    border: none;
-    text-decoration: none;
-    margin-right: 20px;
-}
+    .product-delete-page .cancel-btn a {
+        color: white;
+        font-size: 14px;
+        padding: 9px 16px;
+        border-radius: 12px;
+        background-color: black;
+        font-weight: bold;
+        border: none;
+        text-decoration: none;
+        margin-right: 20px;
+    }
 
-.product-delete-page .action-btn {
-    color: white;
-    font-size: 14px;
-    padding: 8px 16px;
-    border-radius: 12px;
-    background-color: red;
-    font-weight: bold;
-    border: none;
-}
+    .product-delete-page .action-btn {
+        color: white;
+        font-size: 14px;
+        padding: 8px 16px;
+        border-radius: 12px;
+        background-color: red;
+        font-weight: bold;
+        border: none;
+    }
