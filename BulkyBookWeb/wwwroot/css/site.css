@@ -1,18 +1,113 @@
 html {
-  font-size: 14px;
+    font-size: 14px;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    html {
+        font-size: 16px;
+    }
 }
 
 html {
-  position: relative;
-  min-height: 100%;
+    position: relative;
+    min-height: 100%;
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
+}
+
+.body-container {
+    padding: 0 100px;
+    background-color: white;
+}
+
+/* This is css for product index*/
+
+.product-index {
+    height: calc(100vh - 150px);
+    padding: 50px 0px;
+}
+
+    .product-index .admin-action-btns a {
+        color: black;
+    }
+
+    .product-index p {
+        text-align: right;
+    }
+
+        .product-index p a {
+            background-color: black;
+            font-size: 12px;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 12px;
+        }
+
+table td, th {
+    color: black;
+    border: 1px solid black;
+    vertical-align: middle;
+    text-align: center;
+}
+
+/* This is css for product upsert */
+
+.product-upsert-page {
+    height: calc(100vh - 150px);
+    padding: 50px 0px;
+}
+
+    .product-upsert-page .form-group {
+        padding: 10px;
+    }
+
+    .product-upsert-page .action-btn {
+        color: white;
+        font-size: 14px;
+        padding: 8px 16px;
+        border-radius: 12px;
+        background-color: black;
+        font-weight: bold;
+        border: none;
+    }
+
+    .product-upsert-page .cancel-btn a {
+        color: white;
+        font-size: 14px;
+        padding: 9px 16px;
+        border-radius: 12px;
+        background-color: black;
+        font-weight: bold;
+        border: none;
+        text-decoration: none;
+    }
+
+/* This is the css for product delete */
+.product-delete-page {
+    height: calc(100vh - 150px);
+    padding: 50px 0px;
+}
+
+.product-delete-page .cancel-btn a {
+    color: white;
+    font-size: 14px;
+    padding: 9px 16px;
+    border-radius: 12px;
+    background-color: black;
+    font-weight: bold;
+    border: none;
+    text-decoration: none;
+    margin-right: 20px;
+}
+
+.product-delete-page .action-btn {
+    color: white;
+    font-size: 14px;
+    padding: 8px 16px;
+    border-radius: 12px;
+    background-color: red;
+    font-weight: bold;
+    border: none;
 }
