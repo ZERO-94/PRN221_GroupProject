@@ -109,5 +109,14 @@ namespace BulkyBookWeb.Controllers
             else TempData["error"] = "Failed to delete!";
             return RedirectToAction("Index");
         }
+        [HttpGet]
+        public async Task<IActionResult> Search(string search)
+        {
+            if (String.IsNullOrEmpty(search))
+                return RedirectToAction("Index");
+            ViewBag.SearchTerm = search;
+            IEnumerable<Category> categories = await unitOfWork.CategoryRepository.GetAll(cate => cate.Name.ToUpper().Contains(search.ToUpper().Trim()));
+            return View("Index", categories);
+        }
     }
 }
