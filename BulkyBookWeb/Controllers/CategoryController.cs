@@ -15,7 +15,7 @@ namespace BulkyBookWeb.Controllers
 
         public async Task<IActionResult> Index()
         {
-            IEnumerable<Category> categories = await unitOfWork.CategoryRepository.GetAll();
+            IEnumerable<Category> categories = await unitOfWork.CategoryRepository.GetAll(x=>!x.Name.Contains("$(Deleted)"));
             return View(categories);
         }
 
@@ -31,7 +31,7 @@ namespace BulkyBookWeb.Controllers
         public async Task<IActionResult> Create(Category newCategory)
         {
             //custom rule
-            if(newCategory.Name == newCategory.DisplayOrder.ToString())
+            if (newCategory.Name == newCategory.DisplayOrder.ToString())
             {
                 ModelState.AddModelError("Name", "Name can't be similar to Display order!");
             }
@@ -51,7 +51,7 @@ namespace BulkyBookWeb.Controllers
         public async Task<IActionResult> Edit(int? id)
         {
             var category = await unitOfWork.CategoryRepository.FirstOrDefault(x => x.Id == id);
-            if(category == null)
+            if (category == null)
             {
                 return NotFound();
             }
@@ -106,12 +106,16 @@ namespace BulkyBookWeb.Controllers
             {
                 return NotFound();
             }
-
-            unitOfWork.CategoryRepository.Remove(category);
+            category.Name += "$(Deleted)";
+            unitOfWork.CategoryRepository.Update(category);
             var res = await unitOfWork.SaveAsync();
-            if (res > 0) TempData["success"] = "Delete successfully!";
+            if (res > 0)
+            {
+                TempData["success"] = "Delete successfully!";
+                return RedirectToAction("Index");
+            }
             else TempData["error"] = "Failed to delete!";
-            return RedirectToAction("Index");
+            return View();
         }
         [HttpGet]
         public async Task<IActionResult> Search(string search)
@@ -119,7 +123,7 @@ namespace BulkyBookWeb.Controllers
             if (String.IsNullOrEmpty(search))
                 return RedirectToAction("Index");
             ViewBag.SearchTerm = search;
-            IEnumerable<Category> categories = await unitOfWork.CategoryRepository.GetAll(cate => cate.Name.ToUpper().Contains(search.ToUpper().Trim()));
+            IEnumerable<Category> categories = await unitOfWork.CategoryRepository.GetAll(cate => cate.Name.ToUpper().Contains(search.ToUpper().Trim()) && !cate.Name.Contains("$(Deleted)"));
             return View("Index", categories);
         }
     }
