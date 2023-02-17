@@ -1,0 +1,60 @@
+﻿@using Microsoft.AspNetCore.Identity
+@model List<OrderDetail>
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+@{
+	ViewData["Title"] = "Index";
+}
+
+<div class="w-100 d-flex justify-content-between my-3">
+	<h1>Order Detail</h1>
+</div>
+@if (SignInManager.IsSignedIn(User))
+{
+
+	<table class="table table-bordered table-striped">
+		<thead>
+			<tr>
+				@if (User.IsInRole("Admin"))
+				{
+
+					<th>
+						OrderHeader Id
+					</th>
+				}
+				<th>
+					ProductId
+				</th>
+				<th>
+					Count
+				</th>
+				<th>
+					Price
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var obj in Model)
+			{
+				<tr>
+					@if (User.IsInRole("Admin"))
+					{
+						<td>
+							@obj.OrderHeaderId
+						</td>
+					}
+					<td>
+						@obj.ProductId
+					</td>
+					<td>
+						@obj.Count
+					</td>
+					<td> 
+						@obj.Price
+					</td>
+				</tr>
+
+			}
+		</tbody>
+	</table>
+}
