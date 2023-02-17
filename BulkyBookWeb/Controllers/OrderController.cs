@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Collections.Generic;
+using BulkyBook.BusinessObject.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace BulkyBookWeb.Controllers
 {
@@ -6,7 +8,8 @@ namespace BulkyBookWeb.Controllers
     {
         public IActionResult Index()
         {
-            return View();
+            IEnumerable<OrderHeader> orders = new List<OrderHeader>();
+            return View(orders);
         }
     }
 }

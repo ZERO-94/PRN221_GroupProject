@@ -74,7 +74,11 @@ namespace BulkyBookWeb.Controllers
             {
                 unitOfWork.CategoryRepository.Update(editCategory);
                 var res = await unitOfWork.SaveAsync();
-                if (res > 0) TempData["success"] = "Edit successfully!";
+                if (res > 0)
+                {
+                    TempData["success"] = "Edit successfully!";
+                    return RedirectToAction("Index");
+                }
                 else TempData["error"] = "Failed to edit!";
             }
             return View(editCategory);
