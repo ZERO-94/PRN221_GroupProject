@@ -30,5 +30,6 @@ namespace BulkyBook.BusinessObject.Models
         public string? State { get; set; }
         public string? PostalCode { get; set; }
         public List<OrderDetail> OrderDetails { get; set; }
+
     }
 }

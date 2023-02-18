@@ -4,7 +4,7 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Shopping Cart</h1>
 
 @if(@Model != null) {
 <table class="table">
@@ -51,6 +51,7 @@
         }
     </tbody>
 </table>
+<a href="/Order/Create">Proceed to Checkout</a>
 } else {
     <p>Please start buying thing!</p>
 }

@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 using BulkyBook.BusinessObject.Models;
 using BulkyBook.DataAccess.Data;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 namespace BulkyBookWeb.Controllers
 {
@@ -15,7 +17,7 @@ namespace BulkyBookWeb.Controllers
             this.unitOfWork = unitOfWork;
         }
 
-        public async Task<IActionResult> Index(string? name="")
+        public async Task<IActionResult> Index(string? name = "")
 
         {
             IEnumerable<OrderHeader> orders = await unitOfWork.OrderHeaderRepository
@@ -38,7 +40,7 @@ namespace BulkyBookWeb.Controllers
             return View("Index", orders);
         }
         [HttpGet]
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
             return View();
         }
@@ -48,22 +50,22 @@ namespace BulkyBookWeb.Controllers
             orderHeader.OrderDate = DateTime.UtcNow;
             orderHeader.ShippingDate = orderHeader.OrderDate.AddDays(2);
             orderHeader.TrackingNumber = "123";
-            //order detail not yet added
-            var orderDetails = await unitOfWork.OrderDetailRepository.GetAll(x => x.OrderHeaderId == 1);
-            double total = 0;
-            if (orderDetails == null)
+            orderHeader.OrderDetails = new List<OrderDetail>();
+            var cart = HttpContext.Session.GetString("cart");
+            var itemList = JsonConvert.DeserializeObject<List<CartProduct>>(cart);
+            foreach (var item in itemList)
             {
-                TempData["error"] = "Order have no item";
-                return View();
+                var product = await unitOfWork.ProductRepository.FirstOrDefault(x => x.Id == item.Id);
+                var orderDetail = new OrderDetail()
+                {
+                    OrderHeaderId = orderHeader.Id,
+                    ProductId = item.Id,
+                    Count = item.Total,
+                    Price = product.Price
+                };
+                orderHeader.OrderDetails.Add(orderDetail);
+                orderHeader.OrderTotal += orderDetail.Count * orderDetail.Price;
             }
-            else
-			{
-				foreach (var orderDetail in orderDetails)
-				{
-                    total += orderDetail.Count * orderDetail.Price;
-				}
-			}
-            orderHeader.OrderTotal = total;
             unitOfWork.OrderHeaderRepository.Add(orderHeader);
             var res = await unitOfWork.SaveAsync();
             if (res > 0) TempData["success"] = "create successfully!";
@@ -72,15 +74,15 @@ namespace BulkyBookWeb.Controllers
         }
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
-		{
+        {
             var order = await unitOfWork.OrderHeaderRepository
                 .FirstOrDefault(x => x.Id == id,
                 query => query.Include(x => x.OrderDetails).ThenInclude(x => x.Product));
             return View(order);
-		}
+        }
         [HttpPost]
         public async Task<IActionResult> Edit(OrderHeader order)
-		{
+        {
             unitOfWork.OrderHeaderRepository.Update(order);
             var res = await unitOfWork.SaveAsync();
             if (res > 0)
