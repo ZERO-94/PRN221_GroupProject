@@ -2,6 +2,7 @@
 using BulkyBook.BusinessObject.Models;
 using BulkyBook.DataAccess.Data;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace BulkyBookWeb.Controllers
 {
@@ -14,16 +15,19 @@ namespace BulkyBookWeb.Controllers
 			this.unitOfWork = unitOfWork;
 		}
 
-		public async Task<IActionResult> Index()
+		public async Task<IActionResult> Index(string? name)
 
         {
-            IEnumerable<OrderHeader> orders = await unitOfWork.OrderHeaderRepository.GetAll();
+            IEnumerable<OrderHeader> orders = await unitOfWork.OrderHeaderRepository
+                .GetAll(x=>String.IsNullOrWhiteSpace(name)||x.CustomerName.ToUpper().Contains(name.ToUpper().Trim()));
             return View(orders);
         }
         public async Task<IActionResult> GetDetail(int id)
 		{
-            var orderDetails = await unitOfWork.OrderDetailRepository.GetAll();
-            return View("Detail",orderDetails);
+            var order = await unitOfWork.OrderHeaderRepository
+                .FirstOrDefault(x=>x.Id == id,
+                query => query.Include(x=>x.OrderDetails).ThenInclude(x=>x.Product));
+            return View("Detail", order.OrderDetails);
 		}
         public async Task<IActionResult> Search(string search)
 		{
