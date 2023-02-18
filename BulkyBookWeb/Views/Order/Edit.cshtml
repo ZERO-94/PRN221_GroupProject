@@ -1,0 +1,42 @@
+﻿@using Microsoft.AspNetCore.Http
+@using Microsoft.AspNetCore.Identity
+@model OrderHeader
+@{
+	ViewData["Title"] = "Create";
+}
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+<div class="d-flex justify-content-between">
+	<h1>Create Order</h1>
+	<a asp-controller="Order" asp-action="Index">Back to order list</a>
+</div>
+<form method="post" asp-action="Edit">
+	<div asp-validation-summary="ModelOnly"></div>
+	<input hidden asp-for="ApplicationUserId" value="@Model.ApplicationUserId"/>
+	<input hidden asp-for="OrderDate" value="@Model.OrderDate"/>
+	<input hidden asp-for="OrderTotal" value="@Model.OrderTotal"/>
+	<input hidden asp-for="TrackingNumber" value="@Model.TrackingNumber"/>
+	<input hidden asp-for="Carrier" value="@Model.Carrier"/>
+	<input hidden asp-for="CustomerName" value="@Model.CustomerName"/>
+	<input hidden asp-for="StreetAddress" value="@Model.StreetAddress"/>
+	<input hidden asp-for="PhoneNumber" value="@Model.PhoneNumber"/>
+	<input hidden asp-for="City" value="@Model.City"/>
+	<input hidden asp-for="State" value="@Model.State"/>
+	<input hidden asp-for="PostalCode" value="@Model.PostalCode"/>
+	<div>
+		<label asp-for="ShippingDate">Shipping Date</label>
+		<input asp-for="ShippingDate" type="datetime" class="form-control" />
+	</div>
+	<div>
+		<label asp-for="OrderStatus">Order Status</label>
+		<input asp-for="OrderStatus" type="text" class="form-control" />
+		<span asp-validation-for="OrderStatus" class="text-danger"></span>
+	</div>
+	<button type="submit" class="btn btn-primary mt-2">Edit</button>
+</form>
+
+@section Scripts
+{
+<partial name="_ValidationScriptsPartial" />
+}

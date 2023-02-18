@@ -10,5 +10,6 @@ namespace BulkyBook.DataAccess.Repositories.OrderHeaderRepository
 {
 	public interface IOrderHeaderRepository : IBaseRepository<OrderHeader>
 	{
+		public void Update(OrderHeader orderHeader);
 	}
 }
