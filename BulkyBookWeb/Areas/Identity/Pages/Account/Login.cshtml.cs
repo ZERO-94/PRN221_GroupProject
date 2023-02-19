@@ -23,12 +23,12 @@ namespace BulkyBookWeb.Areas.Identity.Pages.Account
 {
     public class LoginModel : PageModel
     {
-        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ILogger<LoginModel> _logger;
-        private readonly IUserStore<IdentityUser> _userStore;
-        private readonly IUserEmailStore<IdentityUser> _emailStore;
+        private readonly IUserStore<ApplicationUser> _userStore;
+        private readonly IUserEmailStore<ApplicationUser> _emailStore;
 
-        public LoginModel(SignInManager<IdentityUser> signInManager, ILogger<LoginModel> logger, IUserStore<IdentityUser> userStore)
+        public LoginModel(SignInManager<ApplicationUser> signInManager, ILogger<LoginModel> logger, IUserStore<ApplicationUser> userStore)
         {
             _signInManager = signInManager;
             _logger = logger;
@@ -160,13 +160,13 @@ namespace BulkyBookWeb.Areas.Identity.Pages.Account
             return Page();
         }
 
-        private IUserEmailStore<IdentityUser> GetEmailStore()
+        private IUserEmailStore<ApplicationUser> GetEmailStore()
         {
             if (!_signInManager.UserManager.SupportsUserEmail)
             {
                 throw new NotSupportedException("The default UI requires a user store with email support.");
             }
-            return (IUserEmailStore<IdentityUser>)_userStore;
+            return (IUserEmailStore<ApplicationUser>)_userStore;
         }
     }
 }

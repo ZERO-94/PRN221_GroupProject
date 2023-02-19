@@ -18,7 +18,7 @@ namespace BulkyBook.BusinessObject.Models
         public ApplicationUser ApplicationUser { get; set; }
         [Required]
         public DateTime OrderDate { get; set; }
-        public DateTime ShippingDate { get; set; }
+        public DateTime? ShippingDate { get; set; }
         public double OrderTotal { get; set; }
         public string? OrderStatus { get; set; }
         public string? TrackingNumber { get; set; }
@@ -30,5 +30,6 @@ namespace BulkyBook.BusinessObject.Models
         public string? State { get; set; }
         public string? PostalCode { get; set; }
         public List<OrderDetail> OrderDetails { get; set; }
+
     }
 }
