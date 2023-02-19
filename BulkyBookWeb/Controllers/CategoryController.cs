@@ -31,22 +31,6 @@ namespace BulkyBookWeb.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Category newCategory)
         {
-            ////custom rule
-            //if (newCategory.Name == newCategory.DisplayOrder.ToString())
-            //{
-            //    ModelState.AddModelError("Name", "Name can't be similar to Display order!");
-            //}
-
-            //if (ModelState.IsValid)
-            //{
-            //    unitOfWork.CategoryRepository.Add(newCategory);
-            //    var res = await unitOfWork.SaveAsync();
-            //    if (res > 0) TempData["success"] = "create successfully!";
-            //    else TempData["error"] = "Failed to create!";
-            //    return RedirectToAction("Index");
-            //}
-            //return View(newCategory);
-
             CategoryValidator validator = new CategoryValidator();
             var validation = validator.Validate(newCategory);
             if (!validation.IsValid)

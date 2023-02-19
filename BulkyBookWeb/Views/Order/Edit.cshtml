@@ -16,8 +16,6 @@
 	<input hidden asp-for="ApplicationUserId" value="@Model.ApplicationUserId"/>
 	<input hidden asp-for="OrderDate" value="@Model.OrderDate"/>
 	<input hidden asp-for="OrderTotal" value="@Model.OrderTotal"/>
-	<input hidden asp-for="TrackingNumber" value="@Model.TrackingNumber"/>
-	<input hidden asp-for="Carrier" value="@Model.Carrier"/>
 	<input hidden asp-for="CustomerName" value="@Model.CustomerName"/>
 	<input hidden asp-for="StreetAddress" value="@Model.StreetAddress"/>
 	<input hidden asp-for="PhoneNumber" value="@Model.PhoneNumber"/>
@@ -32,6 +30,15 @@
 		<label asp-for="OrderStatus">Order Status</label>
 		<input asp-for="OrderStatus" type="text" class="form-control" />
 		<span asp-validation-for="OrderStatus" class="text-danger"></span>
+	</div>
+	<div>
+		<label asp-for="TrackingNumber">Tracking Number</label>
+		<input asp-for="TrackingNumber" type="text" class="form-control" />
+		<span asp-validation-for="TrackingNumber" class="text-danger"></span>
+	</div>
+		<label asp-for="Carrier">Carrier</label>
+		<input asp-for="Carrier" type="text" class="form-control" />
+		<span asp-validation-for="Carrier" class="text-danger"></span>
 	</div>
 	<button type="submit" class="btn btn-primary mt-2">Edit</button>
 </form>

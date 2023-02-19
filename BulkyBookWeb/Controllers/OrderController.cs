@@ -21,7 +21,7 @@ namespace BulkyBookWeb.Controllers
 
         {
             IEnumerable<OrderHeader> orders = await unitOfWork.OrderHeaderRepository
-                .GetAll(x => !x.CustomerName.Contains("$(Deleted)") && x.CustomerName.ToUpper().Contains(name.ToUpper().Trim()));
+                .GetAll(x => !x.OrderStatus.Equals("Deleted") && x.CustomerName.ToUpper().Contains(name.ToUpper().Trim()));
             return View(orders);
         }
         public async Task<IActionResult> GetDetail(int id)
@@ -48,8 +48,6 @@ namespace BulkyBookWeb.Controllers
         public async Task<IActionResult> Create(OrderHeader orderHeader)
         {
             orderHeader.OrderDate = DateTime.UtcNow;
-            orderHeader.ShippingDate = orderHeader.OrderDate.AddDays(2);
-            orderHeader.TrackingNumber = "123";
             orderHeader.OrderDetails = new List<OrderDetail>();
             var cart = HttpContext.Session.GetString("cart");
             var itemList = JsonConvert.DeserializeObject<List<CartProduct>>(cart);
@@ -107,7 +105,7 @@ namespace BulkyBookWeb.Controllers
             var order = await unitOfWork.OrderHeaderRepository
                 .FirstOrDefault(x => x.Id == id,
                 query => query.Include(x => x.OrderDetails).ThenInclude(x => x.Product));
-            order.CustomerName += " $(Deleted)";
+            order.OrderStatus = "Deleted";
             unitOfWork.OrderHeaderRepository.Update(order);
             var res = await unitOfWork.SaveAsync();
             if (res > 0)

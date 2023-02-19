@@ -18,10 +18,8 @@
 		<div asp-validation-summary="ModelOnly"></div>
 		<input hidden asp-for="ApplicationUserId" value="@user.Id"/>
 		<input hidden asp-for="OrderDate" value="@(new DateTime())"/>
-		<input hidden asp-for="ShippingDate" value="@(new DateTime())"/>
 		<input hidden asp-for="OrderTotal" value=0/>
 		<input hidden asp-for="OrderStatus" value="Ordered"/>
-		<input hidden asp-for="Carrier" value="Nguyen Van A"/>
 		<input hidden asp-for="CustomerName" value="@user.Name"/>
 		<div>
 			<label asp-for="CustomerName">Customer Name</label>
