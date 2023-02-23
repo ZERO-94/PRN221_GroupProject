@@ -2,6 +2,7 @@
 using BulkyBook.BusinessObject.Models;
 using BulkyBook.DataAccess.Data;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
@@ -11,17 +12,23 @@ namespace BulkyBookWeb.Controllers
     public class OrderController : Controller
     {
         private readonly IUnitOfWork unitOfWork;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public OrderController(IUnitOfWork unitOfWork)
+        public OrderController(IUnitOfWork unitOfWork, UserManager<ApplicationUser> userManager)
         {
             this.unitOfWork = unitOfWork;
+            _userManager = userManager;
         }
 
         public async Task<IActionResult> Index(string? name = "")
-
         {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+                return View();
             IEnumerable<OrderHeader> orders = await unitOfWork.OrderHeaderRepository
-                .GetAll(x => !x.OrderStatus.Equals("Deleted") && x.CustomerName.ToUpper().Contains(name.ToUpper().Trim()));
+                .GetAll(x => User.IsInRole("Admin")
+                            ? !x.OrderStatus.Equals("Deleted") && x.CustomerName.ToUpper().Contains(name.ToUpper().Trim())
+                            : !x.OrderStatus.Equals("Deleted") && x.ApplicationUserId.Equals(user.Id));
             return View(orders);
         }
         public async Task<IActionResult> GetDetail(int id)
@@ -29,7 +36,7 @@ namespace BulkyBookWeb.Controllers
             var order = await unitOfWork.OrderHeaderRepository
                 .FirstOrDefault(x => x.Id == id,
                 query => query.Include(x => x.OrderDetails).ThenInclude(x => x.Product));
-            return View("Detail", order.OrderDetails);
+            return View("Detail", order);
         }
         public async Task<IActionResult> Search(string search)
         {
