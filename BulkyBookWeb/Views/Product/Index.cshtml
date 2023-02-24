@@ -5,89 +5,112 @@
 @inject UserManager<ApplicationUser> UserManager
 
 @{
-    ViewData["Title"] = "Index";
+	ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Products</h1>
 
+@if (SignInManager.IsSignedIn(User) && User.IsInRole("Admin"))
+{
 <p>
-    <a asp-action="Upsert">Create New</a>
+	<a asp-action="Upsert">Create New</a>
 </p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Title)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ISBN)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Author)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Price)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ImageUrl)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Category)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CoverType)
-            </th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ISBN)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Author)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Price)
-            </td>
-            <td>
-                @if(item.ImageUrl != null)
-                {
-                    <img src="@item.ImageUrl" width="100" height="100"/>
-                }
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Category.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CoverType.Name)
-            </td>
-            <td>
-                @if(@SignInManager.IsSignedIn(User) && User.IsInRole("Admin")) {
-                    <div>
-                        <a asp-action="Upsert" asp-route-id="@item.Id">Edit</a> |
-                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                    </div>
-                } else {
-                    <form asp-controller="ShoppingCart" asp-action="Add" method="post">
-                        <input name="productId" type="hidden" value="@item.Id" />
-                        <input name="amount" type="hidden" value="1" />
-                        <button class="btn btn-success" type="submit" value="Add" />
-                    </form>
-                }
-            </td>
-        </tr>
+
+	<table class="table">
+		<thead>
+			<tr>
+				<th>
+					@Html.DisplayNameFor(model => model.Title)
+				</th>
+				<th>
+					@Html.DisplayNameFor(model => model.Description)
+				</th>
+				<th>
+					@Html.DisplayNameFor(model => model.ISBN)
+				</th>
+				<th>
+					@Html.DisplayNameFor(model => model.Author)
+				</th>
+				<th>
+					@Html.DisplayNameFor(model => model.Price)
+				</th>
+				<th>
+					@Html.DisplayNameFor(model => model.ImageUrl)
+				</th>
+				<th>
+					@Html.DisplayNameFor(model => model.Category)
+				</th>
+				<th>
+					@Html.DisplayNameFor(model => model.CoverType)
+				</th>
+				<th>Actions</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var item in Model)
+			{
+				<tr>
+					<td>
+						@Html.DisplayFor(modelItem => item.Title)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.Description)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.ISBN)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.Author)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.Price)
+					</td>
+					<td>
+						@if (item.ImageUrl != null)
+						{
+							<img src="@item.ImageUrl" width="100" height="100" />
+						}
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.Category.Name)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.CoverType.Name)
+					</td>
+					<td>
+						<div>
+							<a asp-action="Upsert" asp-route-id="@item.Id">Edit</a> |
+							<a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+						</div>
+					</td>
+				</tr>
+			}
+		</tbody>
+	</table>
 }
-    </tbody>
-</table>
+else
+{
+	
+<div class="container">
+	<div class="row">
+		@foreach (var product in Model)
+		{
+			<div class="col-md-3 mb-3">
+				<div class="card">
+					<img src="@product.ImageUrl" class="card-img-top" alt="@product.Title">
+					<div class="card-body">
+						<h5 class="card-title">@product.Title</h5>
+						<p class="card-text">@product.Description</p>
+						<p class="card-text">$@product.Price</p>
+						<form asp-controller="ShoppingCart" asp-action="Add" method="post">
+							<input name="productId" type="hidden" value="@product.Id" />
+							<input name="amount" type="hidden" value="1" />
+							<button class="btn btn-success" type="submit" value="Add">Add</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		}
+	</div>
+</div>
+}

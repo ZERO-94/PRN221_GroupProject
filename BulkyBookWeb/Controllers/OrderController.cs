@@ -49,6 +49,11 @@ namespace BulkyBookWeb.Controllers
         [HttpGet]
         public async Task<IActionResult> Create()
         {
+            if (User.Identity.IsAuthenticated == false)
+			{
+                TempData["error"] = "You must login before checking out";
+                return RedirectToAction("Index", "ShoppingCart");
+			}
             return View();
         }
         [HttpPost]
