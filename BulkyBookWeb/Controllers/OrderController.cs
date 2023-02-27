@@ -93,6 +93,10 @@ namespace BulkyBookWeb.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(OrderHeader order)
         {
+            if(order.ShippingDate <= DateTime.UtcNow) {
+				TempData["error"] = "Shipping date should be after today!";
+                return View(order);
+			}
             unitOfWork.OrderHeaderRepository.Update(order);
             var res = await unitOfWork.SaveAsync();
             if (res > 0)
