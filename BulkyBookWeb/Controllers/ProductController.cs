@@ -19,9 +19,12 @@ namespace BulkyBookWeb.Controllers
             this.webHostEnvironment = webHostEnvironment;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string search="")
         {
-            IEnumerable<Product> categories = await unitOfWork.ProductRepository.GetAll(
+            if (!User.IsInRole("Admin"))
+                ViewBag.ShowSearchBar = true;
+            ViewBag.SearchTerm = search;
+            IEnumerable<Product> categories = await unitOfWork.ProductRepository.GetAll(x=> String.IsNullOrWhiteSpace(search) || x.Title.Contains(search.Trim()),
                     includeFunc: (query) => query.Include(x => x.Category).Include(x => x.CoverType)
                 );
             return View(categories);
@@ -65,18 +68,18 @@ namespace BulkyBookWeb.Controllers
                 if (ModelState.IsValid)
                 {
                     //add file
-                    if(file != null )
+                    if (file != null)
                     {
                         var wwwRootPath = webHostEnvironment.WebRootPath;
                         var fileName = Guid.NewGuid().ToString();
                         var extension = Path.GetExtension(file.FileName);
                         var storedPath = Path.Combine(wwwRootPath, "images", "products", fileName + extension);
 
-                        using(var fileStream = new FileStream(storedPath, mode: FileMode.Create))
+                        using (var fileStream = new FileStream(storedPath, mode: FileMode.Create))
                         {
-                           file.CopyTo(fileStream);
+                            file.CopyTo(fileStream);
                         }
-                        product.ImageUrl= Path.Combine("images", "products", fileName + extension);
+                        product.ImageUrl = Path.Combine("images", "products", fileName + extension);
                     }
 
                     unitOfWork.ProductRepository.Add(product);
@@ -105,14 +108,14 @@ namespace BulkyBookWeb.Controllers
                         using (var fileStream = new FileStream(storedPath, mode: FileMode.Create))
                         {
                             //delete before add
-                            if(System.IO.File.Exists(Path.Combine(wwwRootPath, product.ImageUrl)))
+                            if (System.IO.File.Exists(Path.Combine(wwwRootPath, product.ImageUrl)))
                             {
                                 System.IO.File.Delete(Path.Combine(wwwRootPath, product.ImageUrl));
                             }
                             file.CopyTo(fileStream);
                         }
                         product.ImageUrl = Path.Combine("images", "products", fileName + extension);
-                    } 
+                    }
 
                     unitOfWork.ProductRepository.Update(product);
                     var res = await unitOfWork.SaveAsync();
@@ -120,7 +123,7 @@ namespace BulkyBookWeb.Controllers
                 }
             }
 
-            return View(productViewModel);
+            return RedirectToAction("Index");
         }
 
         //GET

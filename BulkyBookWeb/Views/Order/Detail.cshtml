@@ -1,5 +1,5 @@
 ﻿@using Microsoft.AspNetCore.Identity
-@model List<OrderDetail>
+@model OrderHeader
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
 @{
@@ -8,22 +8,76 @@
 
 <div class="w-100 d-flex justify-content-between my-3">
 	<h1>Order Detail</h1>
+	<div class="btn-group">
+		<a class="rounded-3 bg-light text-dark fw-semibold text-decoration-none d-flex justify-content-center align-items-center px-2" asp-controller="Order" asp-action="Index">Back to Order List</a>
+	</div>
 </div>
 @if (SignInManager.IsSignedIn(User))
 {
-
+	<dl class="row">
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.CustomerName)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.CustomerName)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.OrderDate)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.OrderDate)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.ShippingDate)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.ShippingDate)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.OrderTotal)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.OrderTotal)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.OrderStatus)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.OrderStatus)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.PhoneNumber)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.PhoneNumber)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.StreetAddress)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.StreetAddress)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.City)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.City)
+		</dd>
+	</dl>
 	<table class="table table-bordered table-striped">
 		<thead>
 			<tr>
-				@if (User.IsInRole("Admin"))
-				{
-
-					<th>
-						OrderHeader Id
-					</th>
-				}
 				<th>
 					Product
+				</th>
+				<th>
+					Description
+				</th>
+				<th>
+					ISBN
+				</th>
+				<th>
+					Author
 				</th>
 				<th>
 					Count
@@ -34,17 +88,20 @@
 			</tr>
 		</thead>
 		<tbody>
-			@foreach (var obj in Model)
+			@foreach (var obj in Model.OrderDetails)
 			{
 				<tr>
-					@if (User.IsInRole("Admin"))
-					{
-						<td>
-							@obj.OrderHeaderId
-						</td>
-					}
 					<td>
 						@obj.Product.Title
+					</td>
+					<td>
+						@obj.Product.Description
+					</td>
+					<td>
+						@obj.Product.ISBN
+					</td>
+					<td>
+						@obj.Product.Author
 					</td>
 					<td>
 						@obj.Count

@@ -23,18 +23,21 @@
 		<dd class="col-sm-10">
 			@Html.DisplayFor(model => model.OrderDate)
 		</dd>
+
 		<dt class="col-sm-2">
 			@Html.DisplayNameFor(model => model.ShippingDate)
 		</dt>
 		<dd class="col-sm-10">
 			@Html.DisplayFor(model => model.ShippingDate)
 		</dd>
+
 		<dt class="col-sm-2">
 			@Html.DisplayNameFor(model => model.OrderTotal)
 		</dt>
 		<dd class="col-sm-10">
 			@Html.DisplayFor(model => model.OrderTotal)
 		</dd>
+
 		<dt class="col-sm-2">
 			@Html.DisplayNameFor(model => model.OrderStatus)
 		</dt>
@@ -60,6 +63,56 @@
 			@Html.DisplayFor(model => model.City)
 		</dd>
 	</dl>
+	<table class="table table-bordered table-striped">
+		<thead>
+			<tr>
+				<th>
+					Product
+				</th>
+				<th>
+					Description
+				</th>
+				<th>
+					ISBN
+				</th>
+				<th>
+					Author
+				</th>
+				<th>
+					Count
+				</th>
+				<th>
+					Price
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var obj in Model.OrderDetails)
+			{
+				<tr>
+					<td>
+						@obj.Product.Title
+					</td>
+					<td>
+						@obj.Product.Description
+					</td>
+					<td>
+						@obj.Product.ISBN
+					</td>
+					<td>
+						@obj.Product.Author
+					</td>
+					<td>
+						@obj.Count
+					</td>
+					<td> 
+						@obj.Price
+					</td>
+				</tr>
+
+			}
+		</tbody>
+	</table>
 
 	<form asp-action="Delete" asp-controller="Order" method="post">
 		<input hidden asp-for="Id" />
