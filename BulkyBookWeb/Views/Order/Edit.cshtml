@@ -2,48 +2,57 @@
 @using Microsoft.AspNetCore.Identity
 @model OrderHeader
 @{
-	ViewData["Title"] = "Create";
+    ViewData["Title"] = "Create";
 }
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
 
 <div class="d-flex justify-content-between">
-	<h1>Create Order</h1>
-	<a asp-controller="Order" asp-action="Index">Back to order list</a>
+    <h1>Create Order</h1>
+    <a asp-controller="Order" asp-action="Index">Back to order list</a>
 </div>
 <form method="post" asp-action="Edit">
-	<div asp-validation-summary="ModelOnly"></div>
-	<input hidden asp-for="ApplicationUserId" value="@Model.ApplicationUserId"/>
-	<input hidden asp-for="OrderDate" value="@Model.OrderDate"/>
-	<input hidden asp-for="OrderTotal" value="@Model.OrderTotal"/>
-	<input hidden asp-for="CustomerName" value="@Model.CustomerName"/>
-	<input hidden asp-for="StreetAddress" value="@Model.StreetAddress"/>
-	<input hidden asp-for="PhoneNumber" value="@Model.PhoneNumber"/>
-	<input hidden asp-for="City" value="@Model.City"/>
-	<input hidden asp-for="State" value="@Model.State"/>
-	<input hidden asp-for="PostalCode" value="@Model.PostalCode"/>
-	<div>
-		<label asp-for="ShippingDate">Shipping Date</label>
-		<input asp-for="ShippingDate" type="datetime" class="form-control" />
-	</div>
-	<div>
-		<label asp-for="OrderStatus">Order Status</label>
-		<input asp-for="OrderStatus" type="text" class="form-control" />
-		<span asp-validation-for="OrderStatus" class="text-danger"></span>
-	</div>
-	<div>
-		<label asp-for="TrackingNumber">Tracking Number</label>
-		<input asp-for="TrackingNumber" type="text" class="form-control" />
-		<span asp-validation-for="TrackingNumber" class="text-danger"></span>
-	</div>
-		<label asp-for="Carrier">Carrier</label>
-		<input asp-for="Carrier" type="text" class="form-control" />
-		<span asp-validation-for="Carrier" class="text-danger"></span>
-	</div>
-	<button type="submit" class="btn btn-primary mt-2">Edit</button>
+    <div asp-validation-summary="ModelOnly"></div>
+    <input hidden asp-for="ApplicationUserId" value="@Model.ApplicationUserId" />
+    <input hidden asp-for="OrderDate" value="@Model.OrderDate" />
+    <input hidden asp-for="OrderTotal" value="@Model.OrderTotal" />
+    <input hidden asp-for="CustomerName" value="@Model.CustomerName" />
+    <input hidden asp-for="StreetAddress" value="@Model.StreetAddress" />
+    <input hidden asp-for="PhoneNumber" value="@Model.PhoneNumber" />
+    <input hidden asp-for="City" value="@Model.City" />
+    <input hidden asp-for="State" value="@Model.State" />
+    <input hidden asp-for="PostalCode" value="@Model.PostalCode" />
+    <div>
+        <label asp-for="ShippingDate">Shipping Date</label>
+        <input asp-for="ShippingDate" type="datetime" class="form-control" />
+    </div>
+    <div>
+        <label asp-for="OrderStatus">Order Status</label>
+        <select asp-for="OrderStatus" class="form-control">
+            <option value="Ordered">Ordered</option>
+            <option value="Shipping">Shipping</option>
+            <option value="Deleted">Deleted</option>
+            <option value="Completed">Completed</option>
+        </select>
+        <span asp-validation-for="OrderStatus" class="text-danger"></span>
+    </div>
+    <div>
+        <label asp-for="TrackingNumber">Tracking Number</label>
+        <input asp-for="TrackingNumber" type="text" class="form-control" />
+        <span asp-validation-for="TrackingNumber" class="text-danger"></span>
+    </div>
+    <div>
+    <label asp-for="Carrier">Carrier</label>
+    <input asp-for="Carrier" type="text" class="form-control" />
+    <span asp-validation-for="Carrier" class="text-danger"></span>
+    </div>
+    <div>
+        <button type="submit" class="btn btn-primary mt-2">Edit</button>
+
+    </div>
 </form>
 
 @section Scripts
-{
-<partial name="_ValidationScriptsPartial" />
+    {
+    <partial name="_ValidationScriptsPartial" />
 }

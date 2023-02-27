@@ -66,13 +66,6 @@
 	<table class="table table-bordered table-striped">
 		<thead>
 			<tr>
-				@if (User.IsInRole("Admin"))
-				{
-
-					<th>
-						OrderHeader Id
-					</th>
-				}
 				<th>
 					Product
 				</th>
@@ -86,9 +79,6 @@
 					Author
 				</th>
 				<th>
-					Image
-				</th>
-				<th>
 					Count
 				</th>
 				<th>
@@ -100,12 +90,6 @@
 			@foreach (var obj in Model.OrderDetails)
 			{
 				<tr>
-					@if (User.IsInRole("Admin"))
-					{
-						<td>
-							@obj.OrderHeaderId
-						</td>
-					}
 					<td>
 						@obj.Product.Title
 					</td>
@@ -117,9 +101,6 @@
 					</td>
 					<td>
 						@obj.Product.Author
-					</td>
-					<td>
-						@obj.Product.ImageUrl
 					</td>
 					<td>
 						@obj.Count

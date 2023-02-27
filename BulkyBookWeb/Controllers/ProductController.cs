@@ -24,7 +24,7 @@ namespace BulkyBookWeb.Controllers
             if (!User.IsInRole("Admin"))
                 ViewBag.ShowSearchBar = true;
             ViewBag.SearchTerm = search;
-            IEnumerable<Product> categories = await unitOfWork.ProductRepository.GetAll(x=> String.IsNullOrEmpty(search) || x.Title.Contains(search.Trim()),
+            IEnumerable<Product> categories = await unitOfWork.ProductRepository.GetAll(x=> String.IsNullOrWhiteSpace(search) || x.Title.Contains(search.Trim()),
                     includeFunc: (query) => query.Include(x => x.Category).Include(x => x.CoverType)
                 );
             return View(categories);
