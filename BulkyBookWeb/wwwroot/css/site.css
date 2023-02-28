@@ -2,6 +2,12 @@ html {
     font-size: 14px;
 }
 
+* {
+    font-family: 'Montserrat', sans-serif;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,500;1,500&display=swap');
+
 @media (min-width: 768px) {
     html {
         font-size: 16px;
@@ -18,42 +24,49 @@ body {
 }
 
 .body-container {
-    padding: 0 100px;
+    padding: 50px 100px;
     background-color: white;
 }
 
 /* This is css for product index*/
 
-.product-index {
-    height: calc(100vh - 150px);
-    padding: 50px 0px;
+.product-index .admin-action-btns a {
+    color: black;
 }
 
-    .product-index .admin-action-btns a {
-        color: black;
+.product-index .search-btn {
+    background-color: black;
+    color: white;
+    font-size: 12px;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 12px;
+    font-weight: bold;
+}
+
+.product-index p {
+    text-align: right;
+}
+
+    .product-index p a {
+        background-color: dodgerblue;
+        color: white;
+        font-size: 12px;
+        text-decoration: none;
+        padding: 8px 16px;
+        border-radius: 12px;
+        font-weight: bold;
     }
 
-    .product-index p {
-        text-align: right;
-    }
-
-        .product-index p a {
-            background-color: black;
-            font-size: 12px;
-            text-decoration: none;
-            padding: 8px 16px;
-            border-radius: 12px;
-        }
-
-    .product-index .product-search {
-        background-color: white;
-        color: black;
-        border: 1px solid black;
-        width: 40vw;
-        border-radius: 10px;
-        padding-left: 10px;
-        height: 36px;
-    }
+.product-index .product-search {
+    background-color: white;
+    color: black;
+    border: 1px solid black;
+    width: 40vw;
+    border-radius: 10px;
+    padding-left: 10px;
+    height: 36px;
+}
 
 table td, th {
     color: black;
@@ -64,60 +77,79 @@ table td, th {
 
 /* This is css for product upsert */
 
-.product-upsert-page {
-    height: calc(100vh - 150px);
-    padding: 50px 0px;
+.product-upsert-page .form-group {
+    padding: 10px;
 }
 
-    .product-upsert-page .form-group {
-        padding: 10px;
-    }
+.product-upsert-page .action-btn {
+    color: white;
+    font-size: 14px;
+    padding: 8px 16px;
+    border-radius: 12px;
+    background-color: dodgerblue;
+    font-weight: bold;
+    border: none;
+}
 
-    .product-upsert-page .action-btn {
-        color: white;
-        font-size: 14px;
-        padding: 8px 16px;
-        border-radius: 12px;
-        background-color: dodgerblue;
-        font-weight: bold;
-        border: none;
-    }
-
-    .product-upsert-page .cancel-btn a {
-        color: white;
-        font-size: 14px;
-        padding: 9px 16px;
-        border-radius: 12px;
-        background-color: black;
-        font-weight: bold;
-        border: none;
-        text-decoration: none;
-    }
+.product-upsert-page .cancel-btn a {
+    color: white;
+    font-size: 14px;
+    padding: 9px 16px;
+    border-radius: 12px;
+    background-color: black;
+    font-weight: bold;
+    border: none;
+    text-decoration: none;
+}
 
 /* This is the css for product delete */
-.product-delete-page {
-    height: calc(100vh - 150px);
-    padding: 50px 0px;
+.product-delete-page .cancel-btn a {
+    color: white;
+    font-size: 14px;
+    padding: 9px 16px;
+    border-radius: 12px;
+    background-color: black;
+    font-weight: bold;
+    border: none;
+    text-decoration: none;
+    margin-right: 20px;
 }
 
-    .product-delete-page .cancel-btn a {
+.product-delete-page .action-btn {
+    color: white;
+    font-size: 14px;
+    padding: 8px 16px;
+    border-radius: 12px;
+    background-color: red;
+    font-weight: bold;
+    border: none;
+}
+
+/* This is the CSS for cover & category type page*/
+.edit-btn {
+    background-color: dodgerblue;
+    color: white;
+    padding: 5px 20px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+    .edit-btn:hover {
+        background-color: royalblue;
         color: white;
-        font-size: 14px;
-        padding: 9px 16px;
-        border-radius: 12px;
-        background-color: black;
-        font-weight: bold;
-        border: none;
-        text-decoration: none;
-        margin-right: 20px;
     }
 
-    .product-delete-page .action-btn {
+.delete-btn {
+    background-color: red;
+    color: white;
+    padding: 5px 20px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+    .delete-btn:hover {
+        background-color: darkred;
         color: white;
-        font-size: 14px;
-        padding: 8px 16px;
-        border-radius: 12px;
-        background-color: red;
-        font-weight: bold;
-        border: none;
     }

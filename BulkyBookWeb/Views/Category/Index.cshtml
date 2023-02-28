@@ -42,8 +42,8 @@
                     @obj.CreatedDateTime.ToLocalTime()
                 </td>
                 <td>
-                    <a asp-controller="Category" asp-action="Edit" asp-route-id="@obj.Id">Edit</a>
-                    <a asp-controller="Category" asp-action="Delete" asp-route-id="@obj.Id">Delete</a>
+                    <a class="edit-btn" asp-controller="Category" asp-action="Edit" asp-route-id="@obj.Id">Edit</a>
+                    <a class="delete-btn" asp-controller="Category" asp-action="Delete" asp-route-id="@obj.Id">Delete</a>
                 </td>
             </tr>
         }

@@ -1,29 +1,30 @@
-﻿
-@model Category
+﻿@model Category
 @{
     ViewData["Title"] = "Create";
 }
 
 <div class="d-flex justify-content-between">
-<h1>Create Category</h1>
-<a asp-controller="Category" asp-action="Index">Back to category list</a>
+    <h1>Create Category</h1>
+    <a asp-controller="Category" asp-action="Index">Back to category list</a>
 </div>
 <form method="post" asp-action="Create">
     <div asp-validation-summary="ModelOnly"></div>
     <div>
         <label asp-for="Name">Category name</label>
-        <input asp-for="Name" class="form-control"/>
+        <input asp-for="Name" class="form-control" />
         <span asp-validation-for="Name" class="text-danger"></span>
     </div>
-    <div>
+    <div class="mt-2">
         <label asp-for="DisplayOrder">Category display order</label>
-        <input asp-for="DisplayOrder" class="form-control" type="number"/>
+        <input asp-for="DisplayOrder" class="form-control" type="number" />
         <span asp-validation-for="DisplayOrder" class="text-danger"></span>
     </div>
-    <button type="submit" class="btn btn-primary mt-2">Create</button>
+    <div class="d-flex justify-content-center">
+        <button type="submit" class="btn btn-primary mt-2 fw-bold">Create</button>
+    </div>
 </form>
 
-@section Scripts 
-{
-    <partial name="_ValidationScriptsPartial"/>
+@section Scripts
+    {
+    <partial name="_ValidationScriptsPartial" />
 }

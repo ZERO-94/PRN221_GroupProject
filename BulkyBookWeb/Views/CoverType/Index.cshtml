@@ -1,5 +1,4 @@
-﻿
-@model IEnumerable<CoverType>
+﻿@model IEnumerable<CoverType>
 
 
 @{
@@ -7,7 +6,7 @@
 }
 
 <div class="w-100 d-flex justify-content-between my-3">
-    <h1>Cover Types</h1>
+    <h1 style="color: black">Cover Types</h1>
     <div class="btn-group">
         <a class="rounded-3 bg-light text-dark fw-semibold text-decoration-none d-flex justify-content-center align-items-center px-2" asp-controller="CoverType" asp-action="Create">Create cover type</a>
     </div>
@@ -21,14 +20,14 @@
         </tr>
     </thead>
     <tbody>
-        @foreach(CoverType obj in Model)
+        @foreach (CoverType obj in Model)
         {
             <tr>
                 <td>@obj.Id.ToString()</td>
                 <td>@obj.Name</td>
                 <td>
-                    <a asp-controller="CoverType" asp-action="Edit" asp-route-id="@obj.Id">Edit</a>
-                    <a asp-controller="CoverType" asp-action="Delete" asp-route-id="@obj.Id">Delete</a>
+                    <a class="edit-btn" asp-controller="CoverType" asp-action="Edit" asp-route-id="@obj.Id">Edit</a>
+                    <a class="delete-btn" asp-controller="CoverType" asp-action="Delete" asp-route-id="@obj.Id">Delete</a>
                 </td>
             </tr>
         }
