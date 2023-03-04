@@ -49,6 +49,12 @@
                             <a class="nav-link" asp-area="" asp-controller="ShoppingCart" asp-action="Index">Cart</a>
                         </li>
                         }
+                        @if(SignInManager.IsSignedIn(User))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Order" asp-action="Index">Order</a>
+                            </li>
+                        }
                         @*<li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Dropdown</a>
                             <div class="dropdown-menu">
@@ -71,19 +77,6 @@
                 @RenderBody()
         </main>
     </div>
-
-					}
-				</div>
-				<partial name="_LoginPartial" />
-			</div>
-		</nav>
-	</header>
-	<div class="container">
-		<main role="main" class="pb-3">
-			<partial name="Notification" />
-			@RenderBody()
-		</main>
-	</div>
 
 	<footer class="border-top footer text-muted">
 		<div class="container">
