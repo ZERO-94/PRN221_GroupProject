@@ -70,9 +70,12 @@ body {
 
 table td, th {
     color: black;
-    border: 1px solid black;
     vertical-align: middle;
     text-align: center;
+}
+
+table {
+    border: 1px solid black;
 }
 
 /* This is css for product upsert */
