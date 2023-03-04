@@ -19,12 +19,15 @@ namespace BulkyBookWeb.Controllers
             this.webHostEnvironment = webHostEnvironment;
         }
 
-        public async Task<IActionResult> Index(string? name)
+        public async Task<IActionResult> Index(string search="")
         {
-            IEnumerable<Product> products = await unitOfWork.ProductRepository.GetAll(expression: (product) => String.IsNullOrWhiteSpace(name) || product.Title.ToUpper().Contains(name.ToUpper().Trim())
-                    , includeFunc: (query) => query.Include(x => x.Category).Include(x => x.CoverType)
+            if (!User.IsInRole("Admin"))
+                ViewBag.ShowSearchBar = true;
+            ViewBag.SearchTerm = search;
+            IEnumerable<Product> products = await unitOfWork.ProductRepository.GetAll(x=> String.IsNullOrWhiteSpace(search) || x.Title.Contains(search.Trim()),
+                    includeFunc: (query) => query.Include(x => x.Category).Include(x => x.CoverType)
                 );
-            TempData["searchValue"] = String.IsNullOrWhiteSpace(name) ? "" : name;
+            TempData["searchValue"] = String.IsNullOrWhiteSpace(search) ? "" : search;
             return View(products);
         }
 
@@ -121,7 +124,7 @@ namespace BulkyBookWeb.Controllers
                 }
             }
 
-            return View(productViewModel);
+            return RedirectToAction("Index");
         }
 
         //GET

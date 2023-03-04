@@ -1,0 +1,60 @@
+﻿@using Microsoft.AspNetCore.Http
+@using Microsoft.AspNetCore.Identity
+@model OrderHeader
+@{
+	ViewData["Title"] = "Create";
+}
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+@if (SignInManager.IsSignedIn(User))
+{
+	var user = await UserManager.GetUserAsync(User);
+	<div class="d-flex justify-content-between">
+		<h1>Create Order</h1>
+		<a asp-controller="Order" asp-action="Index">Back to order list</a>
+	</div>
+	<form method="post" asp-action="Create">
+		<div asp-validation-summary="ModelOnly"></div>
+		<input hidden asp-for="ApplicationUserId" value="@user.Id"/>
+		<input hidden asp-for="OrderDate" value="@(new DateTime())"/>
+		<input hidden asp-for="OrderTotal" value=0/>
+		<input hidden asp-for="OrderStatus" value="Ordered"/>
+		<input hidden asp-for="CustomerName" value="@user.Name"/>
+		<div>
+			<label asp-for="CustomerName">Customer Name</label>
+			<input disabled asp-for="CustomerName" type="text" value="@user.Name" class="form-control" />
+		</div>
+		<div>
+			<label asp-for="PhoneNumber">Phone Number</label>
+			<input asp-for="PhoneNumber" type="number" class="form-control"/>
+			<span asp-validation-for="PhoneNumber" class="text-danger"></span>
+		</div>
+		<div>
+			<label asp-for="StreetAddress">Street Address</label>
+			<input asp-for="StreetAddress" type="text" class="form-control"/>
+			<span asp-validation-for="PhoneNumber" class="text-danger"></span>
+		</div>
+		<div>
+			<label asp-for="City">City</label>
+			<input asp-for="City" type="text" class="form-control"/>
+			<span asp-validation-for="City" class="text-danger"></span>
+		</div>
+		<div>
+			<label asp-for="State">State</label>
+			<input asp-for="State" type="text" class="form-control"/>
+			<span asp-validation-for="State" class="text-danger"></span>
+		</div>
+		<div>
+			<label asp-for="PostalCode">Postal Code</label>
+			<input asp-for="PostalCode" type="number" class="form-control"/>
+			<span asp-validation-for="PostalCode" class="text-danger"></span>
+		</div>
+		<button type="submit" class="btn btn-primary mt-2">Create</button>
+	</form>
+}
+
+@section Scripts
+{
+<partial name="_ValidationScriptsPartial" />
+}

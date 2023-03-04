@@ -1,13 +1,17 @@
 ﻿@model IEnumerable<Product>
 @using Microsoft.AspNetCore.Identity
 
-@inject SignInManager<IdentityUser> SignInManager
-@inject UserManager<IdentityUser> UserManager
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
 
 @{
-    ViewData["Title"] = "Index";
+	ViewData["Title"] = "Index";
 }
 
+<h1>Products</h1>
+
+@if (SignInManager.IsSignedIn(User) && User.IsInRole("Admin"))
+{
 <div class="product-index">
     <h1 style="color:black; text-shadow: none">Product Management</h1>
     <form asp-action="Index" method="get">
@@ -81,25 +85,40 @@
                         @Html.DisplayFor(modelItem => item.CoverType.Name)
                     </td>
                     <td>
-                        @if (@SignInManager.IsSignedIn(User) && User.IsInRole("Admin"))
-                        {
-                            <div class="admin-action-btns">
-                                <a asp-action="Upsert" asp-route-id="@item.Id">Edit</a> |
-                                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                            </div>
-                        }
-                        else
-                        {
-                            <form asp-controller="ShoppingCart" asp-action="Add" method="post">
-                                <input name="productId" type="hidden" value="@item.Id" />
-                                <input name="amount" type="hidden" value="1" />
-                                <button class="btn btn-success" type="submit" value="Add" />
-                            </form>
-                        }
+						<div class="admin-action-btns">
+							<a asp-action="Upsert" asp-route-id="@item.Id">Edit</a> |
+							<a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+						</div>
                     </td>
                 </tr>
             }
         </tbody>
     </table>
 </div>
-
+}
+else
+{
+	
+<div class="container">
+	<div class="row">
+		@foreach (var product in Model)
+		{
+			<div class="col-md-3 mb-3">
+				<div class="card">
+					<img src="@product.ImageUrl" class="card-img-top" alt="@product.Title">
+					<div class="card-body">
+						<h5 class="card-title">@product.Title</h5>
+						<p class="card-text">@product.Description</p>
+						<p class="card-text">$@product.Price</p>
+						<form asp-controller="ShoppingCart" asp-action="Add" method="post">
+							<input name="productId" type="hidden" value="@product.Id" />
+							<input name="amount" type="hidden" value="1" />
+							<button class="btn btn-success" type="submit" value="Add">Add</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		}
+	</div>
+</div>
+}

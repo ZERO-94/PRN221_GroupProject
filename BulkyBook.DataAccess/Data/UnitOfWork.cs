@@ -1,6 +1,8 @@
 ﻿using BulkyBook.DataAccess.Repositories.ApplicationUserRepository;
 using BulkyBook.DataAccess.Repositories.CategoryRepository;
 using BulkyBook.DataAccess.Repositories.CoverTypeRepository;
+using BulkyBook.DataAccess.Repositories.OrderDetailRepository;
+using BulkyBook.DataAccess.Repositories.OrderHeaderRepository;
 using BulkyBook.DataAccess.Repositories.ProductRepository;
 
 namespace BulkyBook.DataAccess.Data
@@ -18,6 +20,8 @@ namespace BulkyBook.DataAccess.Data
         private ICoverTypeRepository coverTypeRepository;
         private IProductRepository productRepository;
         private IApplicationUserRepository applicationUserRepository;
+        private IOrderDetailRepository orderDetailRepository;
+        private IOrderHeaderRepository orderHeaderRepository;
 
         public ICategoryRepository CategoryRepository { 
             get
@@ -64,8 +68,31 @@ namespace BulkyBook.DataAccess.Data
                 return this.applicationUserRepository;
             }
         }   
+        public IOrderDetailRepository OrderDetailRepository
+		{
+            get
+			{
+                if (this.orderDetailRepository == null)
+				{
+                    this.orderDetailRepository = new OrderDetailRepository(context);
+				}
+                return this.orderDetailRepository;
+			}
+		}
 
-        public async Task<int> SaveAsync()
+		public IOrderHeaderRepository OrderHeaderRepository
+		{
+            get
+			{
+                if (this.orderHeaderRepository == null)
+				{
+                    this.orderHeaderRepository = new OrderHeaderRepository(context);
+				}
+                return this.orderHeaderRepository;
+			}
+		}
+
+		public async Task<int> SaveAsync()
         {
             return await context.SaveChangesAsync();
         }

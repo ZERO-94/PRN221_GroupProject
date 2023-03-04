@@ -26,19 +26,21 @@ namespace BulkyBook.DataAccess.Repositories.ProductRepository
             var productFromDb = _dbSet.FirstOrDefault(x => x.Id == product.Id);
             if(productFromDb != null)
             {
-                product.Title = productFromDb.Title;
-                product.Description = productFromDb.Description;
-                product.CategoryId = productFromDb.CategoryId;
-                product.ISBN = productFromDb.ISBN;
-                product.Author = productFromDb.Author;
-                product.Price = productFromDb.Price;
-                product.CoverTypeId = productFromDb.CoverTypeId;
+                productFromDb.Title = product.Title;
+                productFromDb.Description = product.Description;
+                productFromDb.CategoryId = product.CategoryId;
+                productFromDb.ISBN = product.ISBN;
+                productFromDb.Author = product.Author;
+                productFromDb.Price = product.Price;
+                productFromDb.CoverTypeId = product.CoverTypeId;
 
                 if(!String.IsNullOrWhiteSpace(product.ImageUrl))
                 {
                     productFromDb.ImageUrl= product.ImageUrl;
                 }
             }
+            _dbSet.Update(productFromDb);
+
         }
     }
 }
