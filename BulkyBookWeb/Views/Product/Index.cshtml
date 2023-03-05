@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Product>
+﻿@model PaginationViewModel<Product>
 @using Microsoft.AspNetCore.Identity
 
 @inject SignInManager<ApplicationUser> SignInManager
@@ -11,48 +11,52 @@
 @if (SignInManager.IsSignedIn(User) && User.IsInRole("Admin"))
 {
 <div class="product-index">
-    <h1 style="color:black; text-shadow: none">Product Management</h1>
-    <form asp-action="Index" method="get">
-        <div>
-            <input class="product-search" type="text" placeholder="Input your search text here" name="name" value="@TempData["searchValue"]" />
-            <button class="search-btn" type="submit" value="Index">Search</button>
-        </div>
-    </form>
-    <p>
-        <a asp-action="Upsert">Create New</a>
-    </p>
-    <table class="table">
-        <thead>
+        <h1 style="color:black; text-shadow: none">Product Management</h1>
+    <div class="d-flex justify-content-between align-items-center">
+        <form class="d-flex my-2 w-50"
+            asp-action="Index" method="get">
+            <input class="form-control me-sm-2" type="search" name="search" placeholder="Search" value="@ViewBag.SearchTerm">
+            <button class="btn btn-secondary my-sm-0" type="submit">Search</button>
+        </form>
+        <p class="mb-0">
+        <a class="h-full btn" asp-action="Upsert">Create New</a>
+        </p>
+    </div>
+    
+    
+    
+        <table class="table table-hover table-striped mt-3">
+        <thead class="my-4">
             <tr>
                 <th>
-                    @Html.DisplayNameFor(model => model.ImageUrl)
+                    Image
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Title)
+                    Title
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Description)
+                    Description
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.ISBN)
+                    ISBN
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Author)
+                    Author
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Price)
+                    Price
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Category)
+                    Category
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.CoverType)
+                    CoverType
                 </th>
                 <th>Actions</th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in Model)
+            @foreach (var item in Model.Data)
             {
                 <tr>
                     <td>
@@ -84,35 +88,66 @@
                     </td>
                     <td>
 						<div class="admin-action-btns">
-							<a asp-action="Upsert" asp-route-id="@item.Id">Edit</a> |
-							<a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                            <a class="edit-btn text-white" asp-action="Upsert" asp-route-id="@item.Id">Edit</a> |
+                            <a class="delete-btn text-white" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
 						</div>
                     </td>
                 </tr>
             }
         </tbody>
     </table>
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">
+            @for(var i = 1; i <= Model.TotalPage; i++) {
+                    <li class="page-item"><a class="page-link" asp-action="Index" asp-route-page="@i">@i</a> </li>
+            }
+        </ul>
+    </nav>
 </div>
 }
 else
 {
-    <h1>Products</h1>
-<div class="container">
-	<div class="row">
-		@foreach (var product in Model)
+
+    
+<div class="container ">
+        <h1>Products</h1>
+        <div class="d-flex justify-content-between product-index">
+
+
+                <form class="d-flex my-2 w-50"
+                  asp-action="Index" method="get">
+                    <input class="form-control me-sm-2" type="search" name="search" placeholder="Search" value="@ViewBag.SearchTerm">
+                    <button class="btn btn-secondary my-sm-0" type="submit">Search</button>
+                </form>
+
+            
+            <nav aria-label="Page navigation example">
+                <ul class="pagination">
+                    @for (var i = 1; i <= Model.TotalPage; i++)
+                    {
+                        <li class="page-item"><a class="page-link" asp-action="Index" asp-route-page="@i">@i</a> </li>
+                    }
+                </ul>
+            </nav>
+        </div>
+        <div class="row justify-content-start mt-4">
+		@foreach (var product in Model.Data)
 		{
-			<div class="col-md-3 mb-3">
+			<div class="col-md-3 mb-5">
 				<div class="card">
 					<img src="@product.ImageUrl" class="card-img-top" alt="@product.Title">
 					<div class="card-body">
 						<h5 class="card-title">@product.Title</h5>
 						<p class="card-text">@product.Description</p>
-						<p class="card-text">$@product.Price</p>
-						<form asp-controller="ShoppingCart" asp-action="Add" method="post">
-							<input name="productId" type="hidden" value="@product.Id" />
-							<input name="amount" type="hidden" value="1" />
-							<button class="btn btn-success" type="submit" value="Add">Add</button>
-						</form>
+                        <div class="d-flex justify-content-between">
+                            <p class="card-text">$@product.Price</p>
+                            <form asp-controller="ShoppingCart" asp-action="Add" method="post">
+                                <input name="productId" type="hidden" value="@product.Id" />
+                                <input name="amount" type="hidden" value="1" />
+                                <button class="btn btn-success" type="submit" value="Add">Add</button>
+                            </form>
+                        </div>
+						
 					</div>
 				</div>
 			</div>

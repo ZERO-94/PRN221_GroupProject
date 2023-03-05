@@ -21,16 +21,23 @@ namespace BulkyBookWeb.Controllers
             this.webHostEnvironment = webHostEnvironment;
         }
 
-        public async Task<IActionResult> Index(string search="")
+        public async Task<IActionResult> Index(string search="", int page=1)
         {
-            if (!User.IsInRole("Admin"))
-                ViewBag.ShowSearchBar = true;
+            int pageSize = 8;
             ViewBag.SearchTerm = search;
-            IEnumerable<Product> products = await unitOfWork.ProductRepository.GetAll(x=> String.IsNullOrWhiteSpace(search) || x.Title.Contains(search.Trim()),
-                    includeFunc: (query) => query.Include(x => x.Category).Include(x => x.CoverType)
+            var result = await unitOfWork.ProductRepository.Pagination(
+                    page, pageSize ,
+                    x=> String.IsNullOrWhiteSpace(search) || x.Title.Contains(search.Trim()),
+                    (query) => query.Include(x => x.Category).Include(x => x.CoverType)
                 );
             TempData["searchValue"] = String.IsNullOrWhiteSpace(search) ? "" : search;
-            return View(products);
+
+            return View(new PaginationViewModel<Product>()
+            {
+                Total = result.Item1,
+                Data= result.Item2,
+                TotalPage = (int?)((result.Item1 + pageSize - 1) / pageSize) ?? 0,
+            });
         }
 
         //GET

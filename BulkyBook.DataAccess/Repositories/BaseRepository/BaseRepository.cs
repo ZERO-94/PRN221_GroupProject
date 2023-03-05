@@ -1,5 +1,7 @@
 ﻿using BulkyBook.BusinessObject.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 
 namespace BulkyBook.DataAccess.Repositories.BaseRepository
@@ -63,6 +65,33 @@ namespace BulkyBook.DataAccess.Repositories.BaseRepository
         public void Remove(TEntity entity)
         {
             _dbSet.Remove(entity);
+        }
+
+        public async Task<(int, IEnumerable<TEntity>)> Pagination(int page = 0,
+        int pageSize = 20,
+        Expression<Func<TEntity, bool>>? expression = null, 
+        Func<IQueryable<TEntity>, IQueryable<TEntity>>? includeFunc = null)
+        {
+            IQueryable<TEntity> query = _dbSet;
+
+            if (expression != null)
+            {
+                query = query.Where(expression);
+            }
+
+            if (includeFunc != null)
+            {
+                query = includeFunc(query);
+            }
+
+            var total = await query.CountAsync();
+
+            query = query.Skip((page - 1) * pageSize)
+                .Take(pageSize);
+
+            var data = await query.ToListAsync();
+
+            return (total, data);
         }
     }
 }
