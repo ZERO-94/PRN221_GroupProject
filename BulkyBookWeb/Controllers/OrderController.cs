@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using BulkyBook.BusinessObject.Models;
+using BulkyBook.BusinessObject.Utilities;
 using BulkyBook.DataAccess.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -20,6 +22,7 @@ namespace BulkyBookWeb.Controllers
             _userManager = userManager;
         }
 
+        [Authorize(Roles = Role.Role_Admin + ", " + Role.Role_User_Customer)]
         public async Task<IActionResult> Index(string? name = "")
         {
             var user = await _userManager.GetUserAsync(User);
@@ -31,6 +34,7 @@ namespace BulkyBookWeb.Controllers
                             : !x.OrderStatus.Equals("Deleted") && x.ApplicationUserId.Equals(user.Id));
             return View(orders);
         }
+        [Authorize(Roles = Role.Role_Admin + ", " + Role.Role_User_Customer)]
         public async Task<IActionResult> GetDetail(int id)
         {
             var order = await unitOfWork.OrderHeaderRepository
@@ -47,6 +51,7 @@ namespace BulkyBookWeb.Controllers
             return View("Index", orders);
         }
         [HttpGet]
+        [Authorize(Roles = Role.Role_User_Customer)]
         public async Task<IActionResult> Create()
         {
             if (User.Identity.IsAuthenticated == false)
@@ -57,6 +62,7 @@ namespace BulkyBookWeb.Controllers
             return View();
         }
         [HttpPost]
+        [Authorize(Roles = Role.Role_User_Customer)]
         public async Task<IActionResult> Create(OrderHeader orderHeader)
         {
             orderHeader.OrderDate = DateTime.UtcNow;
@@ -83,6 +89,7 @@ namespace BulkyBookWeb.Controllers
             return RedirectToAction("Index");
         }
         [HttpGet]
+        [Authorize(Roles = Role.Role_Admin)]
         public async Task<IActionResult> Edit(int id)
         {
             var order = await unitOfWork.OrderHeaderRepository
@@ -91,6 +98,7 @@ namespace BulkyBookWeb.Controllers
             return View(order);
         }
         [HttpPost]
+        [Authorize(Roles = Role.Role_Admin)]
         public async Task<IActionResult> Edit(OrderHeader order)
         {
             if(order.ShippingDate <= DateTime.UtcNow) {

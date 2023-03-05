@@ -1,6 +1,8 @@
 ﻿using BulkyBook.BusinessObject.Models;
+using BulkyBook.BusinessObject.Utilities;
 using BulkyBook.BusinessObject.ViewModels;
 using BulkyBook.DataAccess.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -32,6 +34,7 @@ namespace BulkyBookWeb.Controllers
         }
 
         //GET
+        [Authorize(Roles = Role.Role_Admin)]
         public async Task<IActionResult> Upsert(int? id)
         {
             ProductViewModel productViewModel = new ProductViewModel()
@@ -59,6 +62,7 @@ namespace BulkyBookWeb.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = Role.Role_Admin)]
         public async Task<IActionResult> Upsert(ProductViewModel productViewModel, IFormFile? file)
         {
             var product = productViewModel.Product;
@@ -128,6 +132,7 @@ namespace BulkyBookWeb.Controllers
         }
 
         //GET
+        [Authorize(Roles = Role.Role_Admin)]
         public async Task<IActionResult> Delete(int? id)
         {
             var category = await unitOfWork.ProductRepository.FirstOrDefault(x => x.Id == id);
@@ -142,6 +147,7 @@ namespace BulkyBookWeb.Controllers
         //POST
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = Role.Role_Admin)]
         public async Task<IActionResult> DeletePost(int? id)
         {
             var category = await unitOfWork.ProductRepository.FirstOrDefault(x => x.Id == id);
