@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using NuGet.Packaging.Signing;
 using System.IO;
 
 namespace BulkyBookWeb.Controllers
@@ -147,6 +148,7 @@ namespace BulkyBookWeb.Controllers
             {
                 return NotFound();
             }
+            product.ImageUrl = Request.Scheme + "://" + Path.Combine(Request.Host.Value, product.ImageUrl).Replace("\\", "/");
 
             return View(product);
         }
