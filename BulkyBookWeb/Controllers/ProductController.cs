@@ -94,6 +94,12 @@ namespace BulkyBookWeb.Controllers
                         }
                         product.ImageUrl = Path.Combine("images", "products", fileName + extension);
                     }
+                    else
+                    {
+                        ModelState.AddModelError("", "Uploaded file is empty or null.");
+                        TempData["error"] = "Failed to create!";
+                        return RedirectToAction("Index");
+                    }
 
                     unitOfWork.ProductRepository.Add(product);
                     var res = await unitOfWork.SaveAsync();
