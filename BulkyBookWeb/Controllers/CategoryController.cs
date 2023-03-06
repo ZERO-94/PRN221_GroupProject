@@ -21,7 +21,7 @@ namespace BulkyBookWeb.Controllers
         public async Task<IActionResult> Index(string search = "", int page = 1)
         {
             int pageSize = 8;
-            var result = await unitOfWork.CategoryRepository.Pagination(page, pageSize, x => !x.Name.Contains("Deleted") && x.Name.Contains(search));
+            var result = await unitOfWork.CategoryRepository.Pagination(page, pageSize, x => x.Status != "Deleted" && x.Name.Contains(search));
             ViewBag.SearchTerm = search;
             return View(new PaginationViewModel<Category>()
             {
@@ -120,7 +120,7 @@ namespace BulkyBookWeb.Controllers
             {
                 return NotFound();
             }
-            category.Name += "$(Deleted)";
+            category.Status = "Deleted";
             unitOfWork.CategoryRepository.Update(category);
             var res = await unitOfWork.SaveAsync();
             if (res > 0)

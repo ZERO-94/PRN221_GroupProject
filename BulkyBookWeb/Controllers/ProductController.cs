@@ -27,7 +27,7 @@ namespace BulkyBookWeb.Controllers
             ViewBag.SearchTerm = search;
             var result = await unitOfWork.ProductRepository.Pagination(
                     page, pageSize ,
-                    x=> String.IsNullOrWhiteSpace(search) || x.Title.Contains(search.Trim()),
+                    x=> x.Status != "Deleted" && (String.IsNullOrWhiteSpace(search) || x.Title.Contains(search.Trim())),
                     (query) => query.Include(x => x.Category).Include(x => x.CoverType)
                 );
             TempData["searchValue"] = String.IsNullOrWhiteSpace(search) ? "" : search;
@@ -142,13 +142,13 @@ namespace BulkyBookWeb.Controllers
         [Authorize(Roles = Role.Role_Admin)]
         public async Task<IActionResult> Delete(int? id)
         {
-            var category = await unitOfWork.ProductRepository.FirstOrDefault(x => x.Id == id);
-            if (category == null)
+            var product = await unitOfWork.ProductRepository.FirstOrDefault(x => x.Id == id);
+            if (product == null)
             {
                 return NotFound();
             }
 
-            return View(category);
+            return View(product);
         }
 
         //POST
@@ -157,15 +157,16 @@ namespace BulkyBookWeb.Controllers
         [Authorize(Roles = Role.Role_Admin)]
         public async Task<IActionResult> DeletePost(int? id)
         {
-            var category = await unitOfWork.ProductRepository.FirstOrDefault(x => x.Id == id);
-            if (category == null)
+            var product = await unitOfWork.ProductRepository.FirstOrDefault(x => x.Id == id);
+            if (product == null)
             {
                 return NotFound();
             }
 
-            unitOfWork.ProductRepository.Remove(category);
-            var res = await unitOfWork.SaveAsync();
-            if (res > 0) TempData["success"] = "Delete successfully!";
+			product.Status = "Deleted";
+			unitOfWork.ProductRepository.Update(product);
+			var res = await unitOfWork.SaveAsync();
+			if (res > 0) TempData["success"] = "Delete successfully!";
             else TempData["error"] = "Failed to delete!";
             return RedirectToAction("Index");
         }

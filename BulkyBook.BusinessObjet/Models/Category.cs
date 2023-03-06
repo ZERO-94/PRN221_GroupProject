@@ -11,5 +11,7 @@ namespace BulkyBook.BusinessObject.Models
         [Range(1, 100, ErrorMessage = "Acceptable range is only from 1 to 100!")]
         public int DisplayOrder { get; set; }
         public DateTime CreatedDateTime { get; set; } = DateTime.UtcNow;
-    }
+		[Required]
+		public string Status { get; set; } = "Created";
+	}
 }

@@ -21,7 +21,7 @@ namespace BulkyBookWeb.Controllers
         public async Task<IActionResult> Index(string search = "", int page = 1)
         {
             int pageSize = 8;
-            var result = await unitOfWork.CoverTypeRepository.Pagination(page, pageSize, x => !x.Name.Contains("Deleted") && x.Name.Contains(search));
+            var result = await unitOfWork.CoverTypeRepository.Pagination(page, pageSize, x => x.Status != "Deleted" && x.Name.Contains(search));
             ViewBag.SearchTerm = search;
             return View(new PaginationViewModel<CoverType>()
             {
@@ -109,9 +109,10 @@ namespace BulkyBookWeb.Controllers
                 return NotFound();
             }
 
-            unitOfWork.CoverTypeRepository.Remove(coverType);
-            var res = await unitOfWork.SaveAsync();
-            if (res > 0)
+			coverType.Status = "Deleted";
+			unitOfWork.CoverTypeRepository.Update(coverType);
+			var res = await unitOfWork.SaveAsync();
+			if (res > 0)
             {
                 TempData["success"] = "Edit Successfully!";
                 return RedirectToAction("Index");

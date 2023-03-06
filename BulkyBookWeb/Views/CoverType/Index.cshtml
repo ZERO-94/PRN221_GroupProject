@@ -22,6 +22,7 @@
         <tr>
             <th>Id</th>
             <th>Name</th>
+            <th>Description</th>
             <th>Actions</th>
         </tr>
     </thead>
@@ -31,7 +32,8 @@
             <tr>
                 <td>@obj.Id.ToString()</td>
                 <td>@obj.Name</td>
-                <td class="col-4">
+                <td>@obj.Description</td>
+                <td class="col-3">
                     <a class="edit-btn" asp-controller="CoverType" asp-action="Edit" asp-route-id="@obj.Id">Edit</a>
                     <a class="delete-btn" asp-controller="CoverType" asp-action="Delete" asp-route-id="@obj.Id">Delete</a>
                 </td>
