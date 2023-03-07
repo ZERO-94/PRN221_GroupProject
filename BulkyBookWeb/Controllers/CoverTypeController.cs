@@ -21,7 +21,7 @@ namespace BulkyBookWeb.Controllers
         public async Task<IActionResult> Index(string search = "", int page = 1)
         {
             int pageSize = 8;
-            var result = await unitOfWork.CoverTypeRepository.Pagination(page, pageSize, x => x.Status != "Deleted" && x.Name.Contains(search));
+            var result = await unitOfWork.CoverTypeRepository.Pagination(page, pageSize, x => x.Status != "Deleted" && (String.IsNullOrWhiteSpace(search) || x.Name.Contains(search)));
             ViewBag.SearchTerm = search;
             return View(new PaginationViewModel<CoverType>()
             {
@@ -44,6 +44,14 @@ namespace BulkyBookWeb.Controllers
         {
             if(ModelState.IsValid)
             {
+                var checkCoverType = await unitOfWork.CoverTypeRepository.FirstOrDefault(x => x.Name == coverType.Name);
+
+                if (checkCoverType != null)
+                {
+                    ModelState.AddModelError("Name", "Duplicated Name");
+                    return View(coverType);
+                }
+
                 unitOfWork.CoverTypeRepository.Add(coverType);
                 var res = await unitOfWork.SaveAsync();
                 if(res > 0)
