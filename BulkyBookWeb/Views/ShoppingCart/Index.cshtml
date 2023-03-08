@@ -4,10 +4,15 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Shopping Cart</h1>
+<div class="d-flex justify-content-between">
+    <h1>Shopping Cart</h1>
+    <div class="d-flex align-items-center">
+        <a class="edit-btn btn py-2 align-items-center" asp-controller="Product" asp-action="Index">Continue shopping</a>
+    </div>
+</div>
 
 @if(@Model != null) {
-<table class="table">
+<table class="table table-striped mt-4">
     <thead>
         <tr>
             <th>
@@ -16,9 +21,13 @@
             <th>
                 Title
             </th>
+                <th>
+                    Price
+                </th>
             <th>
                 Total
             </th>
+            
             <th>Actions</th>
         </tr>
     </thead>
@@ -32,15 +41,16 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Product.Title)
                 </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Total)
+                    <td>@Html.DisplayFor(modelItem => item.Product.Price)</td>
+                <td class="col-3">
+                        <form asp-controller="ShoppingCart" asp-action="Update" method="post" class="" style="width:fit-content;">
+                            <input class="form-control w-25 d-inline-block" name="productId" type="hidden" value="@item.Id" />
+                            <input class="form-control w-25 d-inline-block" name="amount" type="number" value="@item.Total" />
+                            <button class="btn btn-success d-inline-block" type="submit" value="Update">Update</button>
+                        </form>
                 </td>
-                <td>
-                        <form asp-controller="ShoppingCart" asp-action="Update" method="post">
-                            <input name="productId" type="hidden" value="@item.Id" />
-                            <input name="amount" type="number" value="@item.Total" />
-                            <button class="btn btn-success" type="submit" value="Update">Update</button>
-                            </form> |
+                <td class="col-2">
+                                
                         <form asp-controller="ShoppingCart" asp-action="Update" method="post">
                             <input name="productId" type="hidden" value="@item.Id" />
                             <input name="amount" type="hidden" value="0" />
@@ -51,7 +61,19 @@
         }
     </tbody>
 </table>
-<a href="/Order/Create">Proceed to Checkout</a>
+    <div class="d-flex justify-content-between mt-4">
+        <div>
+            <h4>
+                Cart total: @Model.Aggregate(0D, (total, next) => total + next.Product.Price)
+            </h4>
+        </div>
+        <div class="d-flex align-items-center">
+            <a class="edit-btn btn py-2 align-items-center" href="/Order/Create">Proceed to Checkout</a>
+        </div>
+    </div>
+    
+
+
 } else {
     <p>Please start buying thing!</p>
 }

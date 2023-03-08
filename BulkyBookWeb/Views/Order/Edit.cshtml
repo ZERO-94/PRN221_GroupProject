@@ -23,12 +23,8 @@
     <input hidden asp-for="State" value="@Model.State" />
     <input hidden asp-for="PostalCode" value="@Model.PostalCode" />
     <div>
-        <label asp-for="ShippingDate">Shipping Date</label>
-        <input asp-for="ShippingDate" type="datetime-local"  class="form-control" />
-    </div>
-    <div>
         <label asp-for="OrderStatus">Order Status</label>
-        <select asp-for="OrderStatus" class="form-control">
+        <select asp-for="OrderStatus" class="form-control" onchange="onChangeSelect()" id="order-status">
             <option value="Ordered">Ordered</option>
             <option value="Shipping">Shipping</option>
             <option value="Deleted">Deleted</option>
@@ -36,12 +32,16 @@
         </select>
         <span asp-validation-for="OrderStatus" class="text-danger"></span>
     </div>
-    <div>
+    <div class="shipping-info d-none">
+        <label asp-for="ShippingDate">Shipping Date</label>
+        <input asp-for="ShippingDate" type="datetime-local" class="form-control" />
+    </div>
+    <div class="shipping-info d-none">
         <label asp-for="TrackingNumber">Tracking Number</label>
         <input asp-for="TrackingNumber" type="text" class="form-control" />
         <span asp-validation-for="TrackingNumber" class="text-danger"></span>
     </div>
-    <div>
+    <div class="shipping-info d-none">
     <label asp-for="Carrier">Carrier</label>
     <input asp-for="Carrier" type="text" class="form-control" />
     <span asp-validation-for="Carrier" class="text-danger"></span>
@@ -51,6 +51,19 @@
 
     </div>
 </form>
+
+<script>
+    function onChangeSelect() {
+        const element = document.getElementById("order-status");
+        if(element.value === "Shipping") {
+            const shippingElements = document.querySelectorAll(".shipping-info");
+            shippingElements.forEach(e => e.classList.remove("d-none"));
+        } else {
+            const shippingElements = document.querySelectorAll(".shipping-info");
+            shippingElements.forEach(e => e.classList.add("d-none"));
+        }
+    }
+</script>
 
 @section Scripts
     {

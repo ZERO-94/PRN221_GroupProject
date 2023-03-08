@@ -1,9 +1,12 @@
 ﻿using BulkyBook.BusinessObject.Models;
+using BulkyBook.BusinessObject.Utilities;
 using BulkyBook.BusinessObject.ViewModels;
 using BulkyBook.DataAccess.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using NuGet.Packaging.Signing;
 using System.IO;
 
 namespace BulkyBookWeb.Controllers
@@ -19,18 +22,27 @@ namespace BulkyBookWeb.Controllers
             this.webHostEnvironment = webHostEnvironment;
         }
 
-        public async Task<IActionResult> Index(string search="")
+        public async Task<IActionResult> Index(string search="", int page=1)
         {
-            if (!User.IsInRole("Admin"))
-                ViewBag.ShowSearchBar = true;
+            int pageSize = 8;
             ViewBag.SearchTerm = search;
-            IEnumerable<Product> categories = await unitOfWork.ProductRepository.GetAll(x=> String.IsNullOrWhiteSpace(search) || x.Title.Contains(search.Trim()),
-                    includeFunc: (query) => query.Include(x => x.Category).Include(x => x.CoverType)
+            var result = await unitOfWork.ProductRepository.Pagination(
+                    page, pageSize ,
+                    x=> x.Status != "Deleted" && (String.IsNullOrWhiteSpace(search) || x.Title.Contains(search.Trim())),
+                    (query) => query.Include(x => x.Category).Include(x => x.CoverType)
                 );
-            return View(categories);
+            TempData["searchValue"] = String.IsNullOrWhiteSpace(search) ? "" : search;
+
+            return View(new PaginationViewModel<Product>()
+            {
+                Total = result.Item1,
+                Data= result.Item2,
+                TotalPage = (int?)((result.Item1 + pageSize - 1) / pageSize) ?? 0,
+            });
         }
 
         //GET
+        [Authorize(Roles = Role.Role_Admin)]
         public async Task<IActionResult> Upsert(int? id)
         {
             ProductViewModel productViewModel = new ProductViewModel()
@@ -58,6 +70,7 @@ namespace BulkyBookWeb.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = Role.Role_Admin)]
         public async Task<IActionResult> Upsert(ProductViewModel productViewModel, IFormFile? file)
         {
             var product = productViewModel.Product;
@@ -80,6 +93,12 @@ namespace BulkyBookWeb.Controllers
                             file.CopyTo(fileStream);
                         }
                         product.ImageUrl = Path.Combine("images", "products", fileName + extension);
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("", "Uploaded file is empty or null.");
+                        TempData["error"] = "Failed to create!";
+                        return RedirectToAction("Index");
                     }
 
                     unitOfWork.ProductRepository.Add(product);
@@ -127,31 +146,35 @@ namespace BulkyBookWeb.Controllers
         }
 
         //GET
+        [Authorize(Roles = Role.Role_Admin)]
         public async Task<IActionResult> Delete(int? id)
         {
-            var category = await unitOfWork.ProductRepository.FirstOrDefault(x => x.Id == id);
-            if (category == null)
+            var product = await unitOfWork.ProductRepository.FirstOrDefault(x => x.Id == id);
+            if (product == null)
             {
                 return NotFound();
             }
+            product.ImageUrl = Request.Scheme + "://" + Path.Combine(Request.Host.Value, product.ImageUrl).Replace("\\", "/");
 
-            return View(category);
+            return View(product);
         }
 
         //POST
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = Role.Role_Admin)]
         public async Task<IActionResult> DeletePost(int? id)
         {
-            var category = await unitOfWork.ProductRepository.FirstOrDefault(x => x.Id == id);
-            if (category == null)
+            var product = await unitOfWork.ProductRepository.FirstOrDefault(x => x.Id == id);
+            if (product == null)
             {
                 return NotFound();
             }
 
-            unitOfWork.ProductRepository.Remove(category);
-            var res = await unitOfWork.SaveAsync();
-            if (res > 0) TempData["success"] = "Delete successfully!";
+			product.Status = "Deleted";
+			unitOfWork.ProductRepository.Update(product);
+			var res = await unitOfWork.SaveAsync();
+			if (res > 0) TempData["success"] = "Delete successfully!";
             else TempData["error"] = "Failed to delete!";
             return RedirectToAction("Index");
         }

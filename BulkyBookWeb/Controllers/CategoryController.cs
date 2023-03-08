@@ -1,10 +1,14 @@
 ﻿using BulkyBook.BusinessObject.Models;
+using BulkyBook.BusinessObject.Utilities;
 using BulkyBook.BusinessObject.Validator;
+using BulkyBook.BusinessObject.ViewModels;
 using BulkyBook.DataAccess.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BulkyBookWeb.Controllers
 {
+    [Authorize(Roles = Role.Role_Admin)]
     public class CategoryController : Controller
     {
         private readonly IUnitOfWork unitOfWork;
@@ -14,10 +18,17 @@ namespace BulkyBookWeb.Controllers
             this.unitOfWork = unitOfWork;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string search = "", int page = 1)
         {
-            IEnumerable<Category> categories = await unitOfWork.CategoryRepository.GetAll(x=>!x.Name.Contains("$(Deleted)"));
-            return View(categories);
+            int pageSize = 8;
+            var result = await unitOfWork.CategoryRepository.Pagination(page, pageSize, x => x.Status != "Deleted" && x.Name.Contains(search));
+            ViewBag.SearchTerm = search;
+            return View(new PaginationViewModel<Category>()
+            {
+                Total = result.Item1,
+                Data = result.Item2,
+                TotalPage = (int?)((result.Item1 + pageSize - 1) / pageSize) ?? 0,
+            });
         }
 
         //GET
@@ -109,7 +120,7 @@ namespace BulkyBookWeb.Controllers
             {
                 return NotFound();
             }
-            category.Name += "$(Deleted)";
+            category.Status = "Deleted";
             unitOfWork.CategoryRepository.Update(category);
             var res = await unitOfWork.SaveAsync();
             if (res > 0)

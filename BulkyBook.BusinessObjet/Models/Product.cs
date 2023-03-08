@@ -34,5 +34,7 @@ namespace BulkyBook.BusinessObject.Models
         public int CoverTypeId { get; set; }
         [ValidateNever]
         public CoverType CoverType { get; set; }
+        [Required]
+        public string Status { get; set; } = "Created";
     }
 }

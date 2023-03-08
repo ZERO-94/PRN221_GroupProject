@@ -26,5 +26,6 @@ namespace BulkyBook.DataAccess.Repositories.CategoryRepository
         {
             _dbSet.Update(category);
         }
+
     }
 }

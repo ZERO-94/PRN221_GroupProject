@@ -1,4 +1,4 @@
-﻿@model List<OrderHeader>
+﻿@model PaginationViewModel<OrderHeader>
 @{
     ViewData["Title"] = "Index";
 }
@@ -6,13 +6,16 @@
 <div class="w-100 d-flex justify-content-between my-3">
     <h1>Orders</h1>
 </div>
-<form class="d-flex my-2 w-100"
-      action="@(Url.Action("Search","Order"))"
+@if (User.IsInRole("Admin"))
+{
+    <form class="d-flex my-2 w-50"
+      asp-action="Index"
       method="get">
-    <input class="form-control me-sm-2" type="search" name="search" placeholder="Search by customer" value="@ViewBag.SearchTerm">
-    <button class="btn btn-secondary my-sm-0" type="submit">Search</button>
-</form>
-<table class="table table-bordered table-striped">
+        <input class="form-control me-sm-2" type="search" name="search" placeholder="Search" value="@ViewBag.SearchTerm">
+        <button class="btn btn-secondary my-sm-0" type="submit">Search</button>
+    </form>
+}
+<table class="table table-bordered table-striped mt-4">
     <thead>
         <tr>
             <th>
@@ -42,7 +45,7 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var obj in Model)
+        @foreach (var obj in Model.Data)
         {
             <a href="#">
             <tr>
@@ -68,11 +71,11 @@
                         @($"{obj.StreetAddress}, {obj.City}")
                 </td>
                 <td>
-                    <a asp-controller="Order" asp-action="GetDetail" asp-route-id="@obj.Id">Detail</a>
+                    <a class="edit-btn" asp-controller="Order" asp-action="GetDetail" asp-route-id="@obj.Id">Detail</a>
                         @if (User.IsInRole("Admin"))
                         {
-                        <a asp-controller="Order" asp-action="Edit" asp-route-id="@obj.Id">Edit</a>
-                        <a asp-controller="Order" asp-action="Delete" asp-route-id="@obj.Id">Delete</a>
+                        <a class="edit-btn bg-success" asp-controller="Order" asp-action="Edit" asp-route-id="@obj.Id">Edit</a>
+                        <a class="delete-btn" asp-controller="Order" asp-action="Delete" asp-route-id="@obj.Id">Delete</a>
                         }
                 </td>
             </tr>
@@ -81,3 +84,11 @@
         }
     </tbody>
 </table>
+<nav aria-label="Page navigation example">
+    <ul class="pagination">
+        @for (var i = 1; i <= Model.TotalPage; i++)
+        {
+            <li class="page-item"><a class="page-link" asp-action="Index" asp-route-page="@i">@i</a> </li>
+        }
+    </ul>
+</nav>

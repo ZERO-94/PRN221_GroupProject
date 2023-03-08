@@ -1,6 +1,9 @@
 ﻿using System.Collections.Generic;
 using BulkyBook.BusinessObject.Models;
+using BulkyBook.BusinessObject.Utilities;
+using BulkyBook.BusinessObject.ViewModels;
 using BulkyBook.DataAccess.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -20,17 +23,27 @@ namespace BulkyBookWeb.Controllers
             _userManager = userManager;
         }
 
-        public async Task<IActionResult> Index(string? name = "")
+        [Authorize(Roles = Role.Role_Admin + ", " + Role.Role_User_Customer)]
+        public async Task<IActionResult> Index(string? search = "", int page = 1)
         {
+            ViewBag.SearchTerm = search;
+            int pageSize = 8;
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
                 return View();
-            IEnumerable<OrderHeader> orders = await unitOfWork.OrderHeaderRepository
-                .GetAll(x => User.IsInRole("Admin")
-                            ? !x.OrderStatus.Equals("Deleted") && x.CustomerName.ToUpper().Contains(name.ToUpper().Trim())
+            var result = await unitOfWork.OrderHeaderRepository
+                .Pagination(page, pageSize, x => User.IsInRole("Admin")
+                            ? !x.OrderStatus.Equals("Deleted") && x.CustomerName.ToUpper().Contains(search.ToUpper().Trim())
                             : !x.OrderStatus.Equals("Deleted") && x.ApplicationUserId.Equals(user.Id));
-            return View(orders);
+
+            return View(new PaginationViewModel<OrderHeader>()
+            {
+                Total = result.Item1,
+                Data = result.Item2,
+                TotalPage = (int?)((result.Item1 + pageSize - 1) / pageSize) ?? 0,
+            });
         }
+        [Authorize(Roles = Role.Role_Admin + ", " + Role.Role_User_Customer)]
         public async Task<IActionResult> GetDetail(int id)
         {
             var order = await unitOfWork.OrderHeaderRepository
@@ -47,6 +60,7 @@ namespace BulkyBookWeb.Controllers
             return View("Index", orders);
         }
         [HttpGet]
+        [Authorize(Roles = Role.Role_User_Customer)]
         public async Task<IActionResult> Create()
         {
             if (User.Identity.IsAuthenticated == false)
@@ -57,9 +71,10 @@ namespace BulkyBookWeb.Controllers
             return View();
         }
         [HttpPost]
+        [Authorize(Roles = Role.Role_User_Customer)]
         public async Task<IActionResult> Create(OrderHeader orderHeader)
         {
-            orderHeader.OrderDate = DateTime.UtcNow;
+            orderHeader.OrderDate = DateTime.Now;
             orderHeader.OrderDetails = new List<OrderDetail>();
             var cart = HttpContext.Session.GetString("cart");
             var itemList = JsonConvert.DeserializeObject<List<CartProduct>>(cart);
@@ -78,11 +93,17 @@ namespace BulkyBookWeb.Controllers
             }
             unitOfWork.OrderHeaderRepository.Add(orderHeader);
             var res = await unitOfWork.SaveAsync();
-            if (res > 0) TempData["success"] = "create successfully!";
+            if (res > 0)
+            {
+                TempData["success"] = "create successfully!";
+                //clear cart 
+                HttpContext.Session.Remove("cart");
+            }
             else TempData["error"] = "Failed to create!";
             return RedirectToAction("Index");
         }
         [HttpGet]
+        [Authorize(Roles = Role.Role_Admin)]
         public async Task<IActionResult> Edit(int id)
         {
             var order = await unitOfWork.OrderHeaderRepository
@@ -91,6 +112,7 @@ namespace BulkyBookWeb.Controllers
             return View(order);
         }
         [HttpPost]
+        [Authorize(Roles = Role.Role_Admin)]
         public async Task<IActionResult> Edit(OrderHeader order)
         {
             if(order.ShippingDate <= DateTime.UtcNow) {

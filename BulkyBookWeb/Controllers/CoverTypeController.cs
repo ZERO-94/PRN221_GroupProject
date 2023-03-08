@@ -1,10 +1,14 @@
 ﻿using BulkyBook.BusinessObject.Models;
+using BulkyBook.BusinessObject.Utilities;
+using BulkyBook.BusinessObject.ViewModels;
 using BulkyBook.DataAccess.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BulkyBookWeb.Controllers
 {
+    [Authorize(Roles = Role.Role_Admin)]
     public class CoverTypeController : Controller
     {
         private readonly IUnitOfWork unitOfWork;
@@ -14,10 +18,17 @@ namespace BulkyBookWeb.Controllers
         }
 
         // GET: CoverTypeController
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string search = "", int page = 1)
         {
-            IEnumerable<CoverType> coverTypes = await unitOfWork.CoverTypeRepository.GetAll();
-            return View(coverTypes);
+            int pageSize = 8;
+            var result = await unitOfWork.CoverTypeRepository.Pagination(page, pageSize, x => x.Status != "Deleted" && x.Name.Contains(search));
+            ViewBag.SearchTerm = search;
+            return View(new PaginationViewModel<CoverType>()
+            {
+                Total = result.Item1,
+                Data = result.Item2,
+                TotalPage = (int?)((result.Item1 + pageSize - 1) / pageSize) ?? 0,
+            });
         }
 
         // GET: CoverTypeController/Create
@@ -98,9 +109,10 @@ namespace BulkyBookWeb.Controllers
                 return NotFound();
             }
 
-            unitOfWork.CoverTypeRepository.Remove(coverType);
-            var res = await unitOfWork.SaveAsync();
-            if (res > 0)
+			coverType.Status = "Deleted";
+			unitOfWork.CoverTypeRepository.Update(coverType);
+			var res = await unitOfWork.SaveAsync();
+			if (res > 0)
             {
                 TempData["success"] = "Edit Successfully!";
                 return RedirectToAction("Index");
