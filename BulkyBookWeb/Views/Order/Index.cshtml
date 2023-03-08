@@ -74,8 +74,11 @@
                     <a class="edit-btn" asp-controller="Order" asp-action="GetDetail" asp-route-id="@obj.Id">Detail</a>
                         @if (User.IsInRole("Admin"))
                         {
-                        <a class="edit-btn bg-success" asp-controller="Order" asp-action="Edit" asp-route-id="@obj.Id">Edit</a>
-                        <a class="delete-btn" asp-controller="Order" asp-action="Delete" asp-route-id="@obj.Id">Delete</a>
+                            @if (obj.OrderStatus != "Canceled" && obj.OrderStatus != "Completed")
+                            {
+                                <a class="edit-btn bg-success" asp-controller="Order" asp-action="Edit" asp-route-id="@obj.Id">Edit</a>
+                            }
+                            <a class="delete-btn" asp-controller="Order" asp-action="Delete" asp-route-id="@obj.Id">Delete</a>
                         }
                 </td>
             </tr>

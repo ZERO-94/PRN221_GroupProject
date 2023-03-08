@@ -24,7 +24,7 @@ namespace BulkyBookWeb.Controllers
         }
 
         [Authorize(Roles = Role.Role_Admin + ", " + Role.Role_User_Customer)]
-        public async Task<IActionResult> Index(string? search = "", int page = 1)
+        public async Task<IActionResult> Index(string search = "", int page = 1)
         {
             ViewBag.SearchTerm = search;
             int pageSize = 8;
@@ -119,6 +119,15 @@ namespace BulkyBookWeb.Controllers
 				TempData["error"] = "Shipping date should be after today!";
                 return View(order);
 			}
+            var orderDb = await unitOfWork.OrderHeaderRepository
+                .FirstOrDefault(x => x.Id == order.Id,
+                query => query.Include(x => x.OrderDetails).ThenInclude(x => x.Product));
+            if(orderDb.OrderStatus == "Canceled" || orderDb.OrderStatus == "Completed")
+            {
+                TempData["error"] = "Invalid order status to edit!";
+                return View(order);
+            }
+
             unitOfWork.OrderHeaderRepository.Update(order);
             var res = await unitOfWork.SaveAsync();
             if (res > 0)
@@ -129,6 +138,32 @@ namespace BulkyBookWeb.Controllers
             else TempData["error"] = "Failed to edit!";
             return RedirectToAction("Index");
         }
+
+        [HttpPost]
+		[Authorize(Roles = Role.Role_User_Customer)]
+		public async Task<IActionResult> CancelOrder(int id)
+        {
+			var order = await unitOfWork.OrderHeaderRepository
+				.FirstOrDefault(x => x.Id == id,
+				query => query.Include(x => x.OrderDetails).ThenInclude(x => x.Product));
+
+            if(order.OrderStatus != "Ordered")
+            {
+				TempData["error"] = "Invalid order status to cancel!";
+				return RedirectToAction("GetDetail", new { id = id });
+			}
+
+            order.OrderStatus = "Canceled";
+			unitOfWork.OrderHeaderRepository.Update(order);
+			var res = await unitOfWork.SaveAsync();
+			if (res > 0)
+			{
+				TempData["success"] = "Cancel successfully!";
+			}
+			else TempData["error"] = "Failed to cancel order!";
+			return RedirectToAction("GetDetail", new {id = id});
+		}
+
         [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {

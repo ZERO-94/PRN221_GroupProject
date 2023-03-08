@@ -25,9 +25,8 @@
     <div>
         <label asp-for="OrderStatus">Order Status</label>
         <select asp-for="OrderStatus" class="form-control" onchange="onChangeSelect()" id="order-status">
-            <option value="Ordered">Ordered</option>
+            <option disabled selected>--Select status--</option>
             <option value="Shipping">Shipping</option>
-            <option value="Deleted">Deleted</option>
             <option value="Completed">Completed</option>
         </select>
         <span asp-validation-for="OrderStatus" class="text-danger"></span>
