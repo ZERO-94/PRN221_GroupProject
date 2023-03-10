@@ -22,13 +22,14 @@ namespace BulkyBookWeb.Controllers
             this.webHostEnvironment = webHostEnvironment;
         }
 
-        public async Task<IActionResult> Index(string search="", int page=1)
+        public async Task<IActionResult> Index(string search="", string category ="", int page=1)
         {
             int pageSize = 8;
             ViewBag.SearchTerm = search;
+            ViewBag.CategoryList = (await unitOfWork.CategoryRepository.GetAll()).Select(x => new SelectListItem() { Text = x.Name, Value = x.Id.ToString() });
             var result = await unitOfWork.ProductRepository.Pagination(
                     page, pageSize ,
-                    x=> x.Status != "Deleted" && (String.IsNullOrWhiteSpace(search) || x.Title.Contains(search.Trim())),
+                    x=> x.Status != "Deleted" && (String.IsNullOrWhiteSpace(search) || x.Title.Contains(search.Trim())) && (String.IsNullOrEmpty(category) || x.CategoryId.ToString() == category),
                     (query) => query.Include(x => x.Category).Include(x => x.CoverType)
                 );
             TempData["searchValue"] = String.IsNullOrWhiteSpace(search) ? "" : search;
