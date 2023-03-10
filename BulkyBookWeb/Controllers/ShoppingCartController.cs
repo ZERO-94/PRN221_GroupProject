@@ -81,7 +81,7 @@ namespace BulkyBookWeb.Controllers
         }
 
         [HttpPost]
-        public ActionResult Add(int productId, int amount)
+        public ActionResult Add(int productId, int amount, string from)
         {
             List<CartProduct>? productIds = null;
             var cart = HttpContext.Session.GetString("cart");
@@ -117,7 +117,11 @@ namespace BulkyBookWeb.Controllers
 
             HttpContext.Session.SetString("cart", JsonConvert.SerializeObject(productIds));
 
+            if(from == "Detail")
+                return RedirectToAction("GetDetail", "Product", new { id = productId });
+
             return RedirectToAction("Index", "Product");
+            
         }
     }
 }
