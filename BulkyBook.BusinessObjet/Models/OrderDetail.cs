@@ -18,6 +18,10 @@ namespace BulkyBook.BusinessObject.Models
         public int ProductId { get; set; }
         [ValidateNever]
         public Product Product { get; set; }
+        public string ProductTitle { get; set; }
+        public string ProductDescription { get; set; }
+        public string ProductISBN { get; set; }
+        public string ProductAuthor { get; set; }
         public int Count { get; set; }
         public double Price { get; set; }
     }

@@ -86,7 +86,11 @@ namespace BulkyBookWeb.Controllers
                     OrderHeaderId = orderHeader.Id,
                     ProductId = item.Id,
                     Count = item.Total,
-                    Price = product.Price
+                    Price = product.Price,
+                    ProductTitle= product.Title,
+                    ProductAuthor= product.Author,
+                    ProductDescription= product.Description,
+                    ProductISBN= product.ISBN,
                 };
                 orderHeader.OrderDetails.Add(orderDetail);
                 orderHeader.OrderTotal += orderDetail.Count * orderDetail.Price;

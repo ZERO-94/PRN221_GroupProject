@@ -15,10 +15,6 @@ namespace BulkyBook.BusinessObject.ViewModels
     {
         public Product Product { get; set; }
 
-        [Required(ErrorMessage = "Please select a file.")]
-        [DataType(DataType.Upload)]
-        public IFormFile Image { get; set; }
-
         [ValidateNever]
         public IEnumerable<SelectListItem> CategoryList { get; set; }
         

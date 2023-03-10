@@ -64,7 +64,7 @@
     <div class="d-flex justify-content-between mt-4">
         <div>
             <h4>
-                Cart total: @Model.Aggregate(0D, (total, next) => total + next.Product.Price)
+                Cart total: @Model.Aggregate(0D, (total, next) => total + next.Product.Price * next.Total)
             </h4>
         </div>
         <div class="d-flex align-items-center">
