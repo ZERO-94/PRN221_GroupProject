@@ -41,6 +41,20 @@ namespace BulkyBookWeb.Controllers
             });
         }
 
+        public async Task<IActionResult> GetDetail(int id)
+        {
+            var product = await unitOfWork.ProductRepository
+                .FirstOrDefault(x => x.Id == id,
+                query => query.Include(x => x.Category).Include(x => x.CoverType));
+
+            if (product == null)
+            {
+                return NotFound();
+            }
+            product.ImageUrl = Request.Scheme + "://" + Path.Combine(Request.Host.Value, product.ImageUrl).Replace("\\", "/");
+            return View("Detail", product);
+        }
+
         //GET
         [Authorize(Roles = Role.Role_Admin)]
         public async Task<IActionResult> Upsert(int? id)

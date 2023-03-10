@@ -35,9 +35,6 @@
                     Title
                 </th>
                 <th>
-                    Description
-                </th>
-                <th>
                     ISBN
                 </th>
                 <th>
@@ -67,9 +64,6 @@
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.Title)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Description)
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.ISBN)
@@ -138,14 +132,17 @@ else
 					<img src="@product.ImageUrl" class="card-img-top" alt="@product.Title">
 					<div class="card-body">
 						<h5 class="card-title">@product.Title</h5>
-						<p class="card-text">@product.Description</p>
+                            <p class="card-text text-truncate">@product.Description</p>
                         <div class="d-flex justify-content-between">
                             <p class="card-text">$@product.Price</p>
+                            <div class="d-flex justify-content-around gap-2">
                             <form asp-controller="ShoppingCart" asp-action="Add" method="post">
                                 <input name="productId" type="hidden" value="@product.Id" />
                                 <input name="amount" type="hidden" value="1" />
                                 <button class="btn btn-success" type="submit" value="Add">Add</button>
                             </form>
+                            <a class="btn btn-dark" asp-controller="Product" asp-action="GetDetail" asp-route-id="@product.Id" asp>View</a>
+                            </div>
                         </div>
 						
 					</div>
