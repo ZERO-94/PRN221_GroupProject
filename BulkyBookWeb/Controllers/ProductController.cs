@@ -110,9 +110,9 @@ namespace BulkyBookWeb.Controllers
                     }
                     else
                     {
-                        ModelState.AddModelError("", "Uploaded file is empty or null.");
-                        TempData["error"] = "Failed to create!";
-                        return RedirectToAction("Index");
+                        ModelState.AddModelError("", "Uploaded file is empty or null");
+                        TempData["error"] = "Uploaded file is empty or null!";
+                        return View(productViewModel);
                     }
 
                     unitOfWork.ProductRepository.Add(product);
