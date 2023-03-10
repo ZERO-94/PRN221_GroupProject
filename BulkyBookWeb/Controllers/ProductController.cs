@@ -26,7 +26,7 @@ namespace BulkyBookWeb.Controllers
         {
             int pageSize = 8;
             ViewBag.SearchTerm = search;
-            ViewBag.CategoryList = (await unitOfWork.CategoryRepository.GetAll()).Select(x => new SelectListItem() { Text = x.Name, Value = x.Id.ToString() });
+            ViewBag.CategoryList = (await unitOfWork.CategoryRepository.GetAll()).Select(x => new SelectListItem() { Text = x.Name, Value = x.Id.ToString(), Selected = x.Id.ToString() == category });
             var result = await unitOfWork.ProductRepository.Pagination(
                     page, pageSize ,
                     x=> x.Status != "Deleted" && (String.IsNullOrWhiteSpace(search) || x.Title.Contains(search.Trim())) && (String.IsNullOrEmpty(category) || x.CategoryId.ToString() == category),
