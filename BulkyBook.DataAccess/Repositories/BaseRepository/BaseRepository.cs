@@ -42,7 +42,7 @@ namespace BulkyBook.DataAccess.Repositories.BaseRepository
                 query = includeFunc(query);
             }    
 
-            return await query.FirstOrDefaultAsync();
+            return await query.AsNoTracking().FirstOrDefaultAsync();
         }
 
         public async Task<IEnumerable<TEntity>> GetAll(Expression<Func<TEntity, bool>>? expression = null, Func<IQueryable<TEntity>, IQueryable<TEntity>>? includeFunc = null)

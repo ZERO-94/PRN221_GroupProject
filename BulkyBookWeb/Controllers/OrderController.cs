@@ -126,7 +126,8 @@ namespace BulkyBookWeb.Controllers
             var orderDb = await unitOfWork.OrderHeaderRepository
                 .FirstOrDefault(x => x.Id == order.Id,
                 query => query.Include(x => x.OrderDetails).ThenInclude(x => x.Product));
-            if(orderDb.OrderStatus == "Canceled" || orderDb.OrderStatus == "Completed")
+
+            if (orderDb.OrderStatus == "Canceled" || orderDb.OrderStatus == "Completed")
             {
                 TempData["error"] = "Invalid order status to edit!";
                 return View(order);
